@@ -2,17 +2,15 @@ package calle.david.udacityrecipeapp.Data.Database;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
-@Entity(foreignKeys = @ForeignKey(
-        entity = Recipes.class,
-        parentColumns = "id",
-        childColumns = "recipeID"
-))
+@Entity
 public class Steps {
     @PrimaryKey(autoGenerate = true)
     private int stepId;
-    private int stepNum;
+    private int id;
     private int recipeID;
     private String shortDescription;
     private String description;
@@ -20,14 +18,22 @@ public class Steps {
     private String thumbnailURL;
 
 
-    public Steps(int stepId, int stepNum, int recipeID, String shortDescription, String description, String videoURL, String thumbnailURL){
+    public Steps(int stepId, int id, int recipeID, String shortDescription, String description, String videoURL, String thumbnailURL){
         this.stepId = stepId;
-        this.stepNum = stepNum;
+        this.id = id;
         this.recipeID = recipeID;
         this.shortDescription = shortDescription;
         this.description = description;
         this.videoURL = videoURL;
         this.thumbnailURL = thumbnailURL;
+    }
+    @Ignore
+    public Steps() {
+
+    }
+    @Ignore
+    public Steps(int recipeID) {
+        this.recipeID = id;
     }
 
     public int getStepId() {
@@ -38,12 +44,12 @@ public class Steps {
         this.stepId = stepId;
     }
 
-    public int getStepNum() {
-        return stepNum;
+    public int getId() {
+        return id;
     }
 
-    public void setStepNum(int stepNum) {
-        this.stepNum = stepNum;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getShortDescription() {

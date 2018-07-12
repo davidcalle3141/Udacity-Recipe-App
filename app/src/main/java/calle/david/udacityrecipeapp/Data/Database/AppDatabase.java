@@ -6,7 +6,7 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 import android.util.Log;
 
-@Database(entities = {Recipes.class, Ingredients.class, Steps.class}, version = 1, exportSchema = false)
+@Database(entities = {Recipe.class, Ingredients.class, Steps.class}, version = 4, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase{
     private static final String LOG_TAG = AppDatabase.class.getSimpleName();
     private static final  Object LOCK = new Object();
@@ -27,6 +27,8 @@ public abstract class AppDatabase extends RoomDatabase{
 
     }
 
-    public abstract RecipesDao recipesDao();
+    public abstract RecipeDao recipesDao();
+    public abstract IngredientsDao ingredientsDao();
+    public abstract StepsDao stepsDao();
 
 }

@@ -3,13 +3,10 @@ package calle.david.udacityrecipeapp.Data.Database;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
-@Entity(foreignKeys = @ForeignKey(
-        entity = Recipes.class,
-        parentColumns = "id",
-        childColumns = "recipeID"
-))
+@Entity
 public class Ingredients {
     @PrimaryKey(autoGenerate = true)
     private int ingredientID;
@@ -24,6 +21,10 @@ public class Ingredients {
         this.ingredientName = ingredientName;
         this.quantity = quantity;
         this.measure = measure;
+    }
+    @Ignore
+    public Ingredients(int recipeID) {
+        this.recipeID = recipeID;
     }
 
     public int getIngredientID() {

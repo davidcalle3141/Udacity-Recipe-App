@@ -3,5 +3,11 @@
     <color name="colorPrimary">#DE6B90</color>
     <color name="colorPrimaryDark">#48151D</color>
     <color name="colorAccent">#FFFFFF</color>
-    <color name="colorCardText">#4c4c4c</color>
+    <color name="colorCardText">#FD625E</color>
+    <color name="colorCardTextSub">#CFCFCF</color>
+    <color name="application_background">#F86E66</color>
+    <color name="application_background_gradient_center">#F2488C</color>
+    <color name="application_background_gradient_end">#EE4588</color>
+
+    ED0C72
 </resources>

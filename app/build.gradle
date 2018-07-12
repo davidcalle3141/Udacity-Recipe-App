@@ -16,6 +16,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 
 dependencies {
@@ -27,26 +31,20 @@ dependencies {
     implementation 'com.android.support:cardview-v7:27.1.1'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
 
+    implementation 'com.android.support:support-v4:28.0.0-alpha3'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
-
-    /*************************************/
+    /** ***********************************/
 
     //3rd party
 
-    //Dagger
-    implementation 'com.google.dagger:dagger-android:2.11'
-    implementation 'com.google.dagger:dagger-android-support:2.11' // if you use the support libraries
-    annotationProcessor 'com.google.dagger:dagger-android-processor:2.11'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
+    //OKHTTP
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+
     // GSON
     implementation 'com.google.code.gson:gson:2.8.2'
-
-    // RETROFIT
-    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
 
     // BUTTERKNIFE
     implementation 'com.jakewharton:butterknife:8.8.1'
@@ -55,8 +53,10 @@ dependencies {
     // GLIDE
     implementation 'com.github.bumptech.glide:glide:4.6.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
+    //PICASSO
+    implementation 'com.squareup.picasso:picasso:2.71828'
 
-    /*************************************/
+    /** ***********************************/
     //Architecture Components
     def lifecycle_version = "1.1.1"
     def room_version = "1.1.1"
@@ -72,9 +72,6 @@ dependencies {
     //Navigation
     implementation "android.arch.navigation:navigation-fragment:$nav_version" // use -ktx for Kotlin
     implementation "android.arch.navigation:navigation-ui:$nav_version" // use -ktx for Kotlin
-
-
-
 
 
 }
