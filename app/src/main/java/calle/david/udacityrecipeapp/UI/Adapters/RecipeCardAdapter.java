@@ -38,11 +38,13 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardViewHolder
     public void onBindViewHolder(@NonNull RecipeCardViewHolder holder, int position) {
         String recipeTitle = recipeList.get(position).getName();
         String recipeImage = recipeList.get(position).getImage();
+        String recipeServingSize = String.valueOf(recipeList.get(position).getServings());
         if(recipeImage!= null && recipeImage.trim().length() != 0){
             Picasso.get().load(recipeImage).into(holder.recipeImage);
 
         }
         holder.recipeTitle.setText(recipeTitle);
+        holder.recipeServingSize.setText(R.string.serving_size+ recipeServingSize);
 
 
     }

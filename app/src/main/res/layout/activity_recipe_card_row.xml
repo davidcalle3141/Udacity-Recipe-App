@@ -33,6 +33,7 @@
                 android:textColor="@color/colorCardText"
                 android:textSize="@dimen/card_text_title_size" />
             <TextView
+                android:id="@+id/recipeCard_Servings_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/recipeCard_Item_Title"
@@ -40,6 +41,7 @@
                 android:padding="@dimen/card_title_text_padding_left"
                 android:textColor="@color/colorCardTextSub"
                 android:textSize="@dimen/card_text_title_sub_size"
+                android:text="@string/serving_size"
                 />
         </RelativeLayout>
 

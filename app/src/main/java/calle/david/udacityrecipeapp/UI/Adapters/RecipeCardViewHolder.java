@@ -14,6 +14,7 @@ import butterknife.BindView;
 public class RecipeCardViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.recipeCard_Item_Image) public ImageView recipeImage;
     @BindView(R.id.recipeCard_Item_Title) public TextView recipeTitle;
+    @BindView(R.id.recipeCard_Servings_text) public TextView recipeServingSize;
 
     public RecipeCardViewHolder(View itemView){
         super(itemView);
