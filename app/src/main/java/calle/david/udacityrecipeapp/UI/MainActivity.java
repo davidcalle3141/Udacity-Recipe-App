@@ -1,9 +1,10 @@
-package calle.david.udacityrecipeapp.UI.RecipeCardsView;
+package calle.david.udacityrecipeapp.UI;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import calle.david.udacityrecipeapp.R;
+import calle.david.udacityrecipeapp.UI.Fragments.RecipeCardsViewFragment;
 
 public class MainActivity extends AppCompatActivity {
 

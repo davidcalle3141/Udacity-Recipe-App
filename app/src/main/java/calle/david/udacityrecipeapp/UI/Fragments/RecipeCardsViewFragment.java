@@ -1,10 +1,7 @@
-package calle.david.udacityrecipeapp.UI.RecipeCardsView;
+package calle.david.udacityrecipeapp.UI.Fragments;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,19 +12,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import calle.david.udacityrecipeapp.Data.Database.Recipe;
 import calle.david.udacityrecipeapp.R;
 import calle.david.udacityrecipeapp.UI.Adapters.RecipeCardAdapter;
-import calle.david.udacityrecipeapp.UI.Adapters.RecipeCardViewHolder;
 import calle.david.udacityrecipeapp.Utilities.InjectorUtils;
+import calle.david.udacityrecipeapp.ViewModel.RecipeAppViewModelFactory;
+import calle.david.udacityrecipeapp.ViewModel.RecipeAppViewModel;
 
 public class RecipeCardsViewFragment extends Fragment {
-    private RecipeCardsViewVM mViewModel;
+    private RecipeAppViewModel mViewModel;
     private Context context;
 
     RecipeCardAdapter recipeCardAdapter;
@@ -62,8 +56,8 @@ public class RecipeCardsViewFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        RecipeCardsViewModelFactory factory = InjectorUtils.provideRecipeCardViewFactory(context);
-        mViewModel = ViewModelProviders.of(this,factory).get(RecipeCardsViewVM.class);
+        RecipeAppViewModelFactory factory = InjectorUtils.provideRecipeCardViewFactory(context);
+        mViewModel = ViewModelProviders.of(this,factory).get(RecipeAppViewModel.class);
         populateUI();
     }
 

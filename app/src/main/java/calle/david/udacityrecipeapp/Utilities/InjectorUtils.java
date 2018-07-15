@@ -6,7 +6,7 @@ import calle.david.udacityrecipeapp.AppExecutors;
 import calle.david.udacityrecipeapp.Data.Database.AppDatabase;
 import calle.david.udacityrecipeapp.Data.Network.RecipeNetworkDataSource;
 import calle.david.udacityrecipeapp.Data.RecipeAppRepo;
-import calle.david.udacityrecipeapp.UI.RecipeCardsView.RecipeCardsViewModelFactory;
+import calle.david.udacityrecipeapp.ViewModel.RecipeAppViewModelFactory;
 
 public class InjectorUtils {
 
@@ -24,8 +24,8 @@ public class InjectorUtils {
         return RecipeNetworkDataSource.getsInstance(context.getApplicationContext(), executors);
     }
 
-    public  static RecipeCardsViewModelFactory provideRecipeCardViewFactory(Context context){
+    public  static RecipeAppViewModelFactory provideRecipeCardViewFactory(Context context){
         RecipeAppRepo repo = provideRepo(context.getApplicationContext());
-        return new RecipeCardsViewModelFactory(repo);
+        return new RecipeAppViewModelFactory(repo);
     }
 }
