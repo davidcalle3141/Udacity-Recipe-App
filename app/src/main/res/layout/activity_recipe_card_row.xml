@@ -27,9 +27,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:padding="@dimen/card_title_text_padding_left"
+                android:paddingStart="@dimen/card_title_text_padding_left"
+                android:paddingEnd="@dimen/card_title_text_padding_left"
+                android:paddingTop="@dimen/card_title_text_padding_left"
 
-                android:gravity="start"
+                android:gravity="center"
                 android:textColor="@color/colorCardText"
                 android:textSize="@dimen/card_text_title_size" />
             <TextView
@@ -37,8 +39,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/recipeCard_Item_Title"
-                android:gravity="start"
-                android:padding="@dimen/card_title_text_padding_left"
+                android:gravity="center"
+                android:paddingBottom="@dimen/card_title_text_padding_left"
+                android:paddingStart="@dimen/card_title_text_padding_left"
+                android:paddingEnd="@dimen/card_title_text_padding_left"
                 android:textColor="@color/colorCardTextSub"
                 android:textSize="@dimen/card_text_title_sub_size"
                 android:text="@string/num_of_steps"
