@@ -11,6 +11,7 @@ public class Recipe {
     @PrimaryKey
     private int id;
     private int servings;
+    private int numOfSteps;
     private String name;
     private String image;
 
@@ -23,9 +24,10 @@ public class Recipe {
     @Ignore
     private boolean hasUpdatedSteps = false;
 
-    public Recipe(int id, String name){
+    public Recipe(int id, String name, int numOfSteps){
         this.id = id;
         this.name = name;
+        this.numOfSteps = numOfSteps;
     }
     @Ignore
     public Recipe() {
@@ -96,4 +98,12 @@ public class Recipe {
     public void setSteps(List<Steps> steps) {
         this.steps = steps;
         }
+
+    public int getNumOfSteps() {
+        return numOfSteps;
+    }
+
+    public void setNumOfSteps(int numOfSteps) {
+        this.numOfSteps = numOfSteps;
+    }
 }

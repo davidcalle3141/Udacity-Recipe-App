@@ -1,6 +1,7 @@
 package calle.david.udacityrecipeapp.UI.Adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -38,13 +39,13 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardViewHolder
     public void onBindViewHolder(@NonNull RecipeCardViewHolder holder, int position) {
         String recipeTitle = recipeList.get(position).getName();
         String recipeImage = recipeList.get(position).getImage();
-        String recipeServingSize = String.valueOf(recipeList.get(position).getServings());
+        String recipeNumOfSteps = String.valueOf(recipeList.get(position).getNumOfSteps());
         if(recipeImage!= null && recipeImage.trim().length() != 0){
             Picasso.get().load(recipeImage).into(holder.recipeImage);
 
         }
         holder.recipeTitle.setText(recipeTitle);
-        holder.recipeServingSize.setText(R.string.serving_size+ recipeServingSize);
+        holder.recipeNumOfSteps.setText(context.getString(R.string.number_of_steps)+recipeNumOfSteps);
 
 
     }

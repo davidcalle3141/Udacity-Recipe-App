@@ -25,7 +25,9 @@ public final class RecipeJsonUtils {
             List<Steps> stepsList = new ArrayList<>();
             List<Ingredients> ingredientsList = new ArrayList<>();
 
+
             for (int i=0; i< results.length();i++){
+                int numOfSteps=0;
                 recipeList.add(new Recipe());
                 recipeList.get(i).setId(results.getJSONObject(i).getInt("id"));
                 recipeList.get(i).setName(results.getJSONObject(i).getString("name"));
@@ -42,7 +44,7 @@ public final class RecipeJsonUtils {
                 JSONArray steps = results.getJSONObject(i).getJSONArray("steps");
 
                 for(int j=0; j< steps.length(); j++){
-
+                    numOfSteps++;
                     stepsList.add(new Steps(recipeList.get(i).getId()));
                     //stepsList.get(i).setId(ingredients.getJSONObject(i).getInt("id"));
                     stepsList.get(i).setDescription(steps.getJSONObject(i).getString("description"));
@@ -57,6 +59,7 @@ public final class RecipeJsonUtils {
                     ingredientsList.get(i).setQuantity(ingredients.getJSONObject(i).getString("quantity"));
                 }
 
+                recipeList.get(i).setNumOfSteps(numOfSteps);
 
 
             }
