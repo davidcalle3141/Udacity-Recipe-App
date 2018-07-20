@@ -26,6 +26,13 @@ public class Ingredients {
     public Ingredients(int recipeID) {
         this.recipeID = recipeID;
     }
+    @Ignore
+    public Ingredients(int recipeID, String ingName, String ingMeasure, String ingQuantity) {
+        this.recipeID = recipeID;
+        this.ingredientName = ingName;
+        this.measure = ingMeasure;
+        this.quantity = ingQuantity;
+    }
 
     public int getIngredientID() {
         return ingredientID;

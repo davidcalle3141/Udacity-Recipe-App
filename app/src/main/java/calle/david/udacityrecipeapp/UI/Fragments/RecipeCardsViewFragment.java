@@ -8,10 +8,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.navigation.Navigation;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import calle.david.udacityrecipeapp.R;
@@ -20,13 +22,15 @@ import calle.david.udacityrecipeapp.Utilities.InjectorUtils;
 import calle.david.udacityrecipeapp.ViewModel.RecipeAppViewModelFactory;
 import calle.david.udacityrecipeapp.ViewModel.RecipeAppViewModel;
 
-public class RecipeCardsViewFragment extends Fragment {
+public class RecipeCardsViewFragment extends Fragment implements RecipeCardAdapter.RecipeCardAdapterOnClickListener {
     private RecipeAppViewModel mViewModel;
-    private Context context;
+    private Context mContext;
+
 
     RecipeCardAdapter recipeCardAdapter;
 
     @BindView(R.id.recipeCardsRV)RecyclerView recyclerView;
+    private View view;
 
     public RecipeCardsViewFragment(){
 
@@ -36,12 +40,12 @@ public class RecipeCardsViewFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_recipe_cards_view,container,false);
-        context= this.getContext();
+        this.view = inflater.inflate(R.layout.fragment_recipe_cards_fragment,container,false);
+        mContext = this.getContext();
         ButterKnife.bind(this,view);
-        GridLayoutManager mGrid = new GridLayoutManager(context,1);
+        GridLayoutManager mGrid = new GridLayoutManager(mContext,1);
         recyclerView.setLayoutManager(mGrid);
-        recipeCardAdapter = new RecipeCardAdapter(context);
+        recipeCardAdapter = new RecipeCardAdapter(mContext, this);
         recyclerView.setAdapter(recipeCardAdapter);
 
 
@@ -56,26 +60,40 @@ public class RecipeCardsViewFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        RecipeAppViewModelFactory factory = InjectorUtils.provideRecipeCardViewFactory(context);
-        mViewModel = ViewModelProviders.of(this,factory).get(RecipeAppViewModel.class);
+        RecipeAppViewModelFactory factory = InjectorUtils.provideRecipeCardViewFactory(getActivity());
+        mViewModel = ViewModelProviders.of(getActivity(),factory).get(RecipeAppViewModel.class);
         populateUI();
     }
 
 
     private void populateUI() {
-        mViewModel.getmRecipeList().removeObservers(this);
+        mViewModel.getRecipeList().removeObservers(this);
 
-        mViewModel.getmRecipeList().observe(this,
+        mViewModel.getRecipeList().observe(this,
                 recipes->{
             if(recipes != null){
+                if(recipes.size()!=0){
                 recipeCardAdapter.addRecipeList(recipes);
                 recipeCardAdapter.notifyDataSetChanged();
+                recyclerView.setVisibility(View.VISIBLE);}
 
             }
                 });
-
     }
 
 
+    @Override
+    public void onItemClick(int position) {
 
+        mViewModel.getRecipeList().observe(this, recipes -> {
+            Bundle bundle = new Bundle();
+            Log.d("CLICK", String.valueOf(recipes.get(position).getId()));
+            bundle.putInt("recipeID", recipes.get(position).getId());
+            bundle.putString("recipeImage", recipes.get(position).getImage());
+            bundle.putString("recipeName", recipes.get(position).getName());
+            Navigation.findNavController(view).navigate(R.id.action_recipeCardsViewFragment_to_recipeIngredientsFragment,bundle);
+
+        });
+
+    }
 }

@@ -1,7 +1,6 @@
 package calle.david.udacityrecipeapp.UI.Adapters;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,13 +16,16 @@ import calle.david.udacityrecipeapp.Data.Database.Recipe;
 import calle.david.udacityrecipeapp.R;
 
 public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardViewHolder> {
+    private final RecipeCardAdapterOnClickListener onItemClickListener;
     private Context context;
-    private List<Recipe> recipeList;
+    protected List<Recipe> recipeList;
 
-    public RecipeCardAdapter(Context context){
+    public RecipeCardAdapter(Context context, RecipeCardAdapterOnClickListener listener){
         this.context = context;
+        this.onItemClickListener = listener;
         recipeList = new ArrayList<>();
     }
+
     public void addRecipeList(List<Recipe> recipeList){
         this.recipeList.clear();
         this.recipeList.addAll(recipeList);
@@ -31,8 +33,8 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardViewHolder
     @NonNull
     @Override
     public RecipeCardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_recipe_card_row,parent,false);
-        return new RecipeCardViewHolder(view);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_recipe_cards_recipe_card,parent,false);
+        return new RecipeCardViewHolder(view,onItemClickListener);
     }
 
     @Override
@@ -48,10 +50,18 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardViewHolder
         holder.recipeNumOfSteps.setText(context.getString(R.string.number_of_steps)+recipeNumOfSteps);
 
 
+
+
     }
 
     @Override
     public int getItemCount() {
         return recipeList.size();
     }
+
+
+    public interface RecipeCardAdapterOnClickListener{
+        void onItemClick(int position);
+    }
+
 }

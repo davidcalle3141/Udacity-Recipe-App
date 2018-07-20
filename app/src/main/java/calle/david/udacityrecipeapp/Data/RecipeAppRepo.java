@@ -6,9 +6,11 @@ import android.arch.lifecycle.LiveData;
 import java.util.List;
 
 import calle.david.udacityrecipeapp.AppExecutors;
+import calle.david.udacityrecipeapp.Data.Database.Ingredients;
 import calle.david.udacityrecipeapp.Data.Database.IngredientsDao;
 import calle.david.udacityrecipeapp.Data.Database.Recipe;
 import calle.david.udacityrecipeapp.Data.Database.RecipeDao;
+import calle.david.udacityrecipeapp.Data.Database.Steps;
 import calle.david.udacityrecipeapp.Data.Database.StepsDao;
 import calle.david.udacityrecipeapp.Data.Network.RecipeNetworkDataSource;
 import calle.david.udacityrecipeapp.Data.Network.RecipeResponse;
@@ -22,6 +24,7 @@ public class RecipeAppRepo {
     private final IngredientsDao mIngredientsDao;
     private final AppExecutors mExecutors;
     private boolean mInitialized = false;
+    private boolean mDetailDataInitialized =false;
 
     private RecipeAppRepo(RecipeDao recipeDao, IngredientsDao ingredientsDao, StepsDao stepsDao, RecipeNetworkDataSource recipeNetworkDataSource,
                           AppExecutors executors){
@@ -32,14 +35,17 @@ public class RecipeAppRepo {
         this.mExecutors = executors;
 
 
-            LiveData<List<Recipe>> networkData = mRecipeNetworkDataSource.getRecipes();
+            LiveData<RecipeResponse> networkData = mRecipeNetworkDataSource.getRecipes();
         networkData.observeForever(recipesFromNetwork -> {
             mExecutors.diskIO().execute(() ->{
                 if (recipesFromNetwork != null ) {
 
                     deleteOldData();
 
-                    mRecipeDao.bulkInsert(recipesFromNetwork);
+                    mRecipeDao.bulkInsert(recipesFromNetwork.getmRecipes());
+                    mIngredientsDao.bulkInsert(recipesFromNetwork.getmIngredients());
+                    mStepsDao.bulkInsert(recipesFromNetwork.getmSteps());
+
 
                 }
             });
@@ -85,6 +91,24 @@ public class RecipeAppRepo {
     }
 
 
+    public LiveData<List<Ingredients>> getIngredientsList(int recipeId) {
+        initilizeData();
+        return mIngredientsDao.loadIngredients(recipeId);
+    }
 
 
+
+
+    public LiveData<List<Steps>> getStepsList(int recipeId) {
+        initilizeData();
+        return mStepsDao.loadSteps(recipeId);
+    }
+    public LiveData<Recipe> getRecipe(int recipeID){
+        initilizeData();
+        return mRecipeDao.selectRecipe(recipeID);
+    }
+
+    public LiveData<List<Ingredients>> getAllIngredients() {
+        return mIngredientsDao.loadAllIngredients();
+    }
 }

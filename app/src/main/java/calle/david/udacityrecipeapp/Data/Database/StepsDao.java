@@ -15,7 +15,7 @@ public interface StepsDao {
     @Insert(onConflict = ABORT)
     void bulkInsert(List<Steps > steps);
 
-    @Query("SELECT * FROM Steps WHERE recipeID = :recipeID")
+    @Query("SELECT * FROM Steps WHERE recipeID = :recipeID ORDER BY id")
     LiveData<List<Steps>> loadSteps(int recipeID);
 
     @Query("DELETE FROM steps")

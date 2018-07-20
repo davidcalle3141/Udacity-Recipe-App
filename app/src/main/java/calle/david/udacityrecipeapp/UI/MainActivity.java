@@ -13,12 +13,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if(savedInstanceState == null){
-            RecipeCardsViewFragment fragment = new RecipeCardsViewFragment();
+       // if(savedInstanceState == null){
+           // RecipeCardsViewFragment fragment = new RecipeCardsViewFragment();
 
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.recipeCardFragment_container,fragment).commit();
+            //getSupportFragmentManager().beginTransaction()
+              //      .add(R.id.recipeCardFragment_container,fragment).commit();
 
-        }
+
+   //     }
     }
 }

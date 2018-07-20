@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/recipeCardsViewFragment">
+
+    <fragment
+        android:id="@+id/recipeCardsViewFragment"
+        android:name="calle.david.udacityrecipeapp.UI.Fragments.RecipeCardsViewFragment"
+        android:label="fragment_recipe_cards_fragment"
+        tools:layout="@layout/fragment_recipe_cards_fragment" >
+        <action
+            android:id="@+id/action_recipeCardsViewFragment_to_recipeIngredientsFragment"
+            app:destination="@id/recipeIngredientsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/recipeIngredientsFragment"
+        android:name="calle.david.udacityrecipeapp.UI.Fragments.RecipeIngredientsFragment"
+        android:label="fragment_recipe_ingredients"
+        tools:layout="@layout/fragment_recipe_ingredients_fragment" >
+        <action
+            android:id="@+id/action_recipeIngredientsFragment_to_recipeStepsFragment"
+            app:destination="@id/recipeStepsFragment" />
+        <argument
+            android:name="recipeID"
+            android:defaultValue="-1"
+            app:type="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/recipeStepsFragment"
+        android:name="calle.david.udacityrecipeapp.UI.Fragments.RecipeStepsFragment"
+        android:label="fragment_recipe_steps"
+        tools:layout="@layout/fragment_recipe_steps" >
+        <argument
+            android:name="stepID"
+            android:defaultValue="-1"
+            app:type="integer" />
+    </fragment>
+</navigation>

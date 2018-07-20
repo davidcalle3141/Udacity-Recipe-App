@@ -45,18 +45,26 @@ public final class RecipeJsonUtils {
 
                 for(int j=0; j< steps.length(); j++){
                     numOfSteps++;
-                    stepsList.add(new Steps(recipeList.get(i).getId()));
-                    //stepsList.get(i).setId(ingredients.getJSONObject(i).getInt("id"));
-                    stepsList.get(i).setDescription(steps.getJSONObject(i).getString("description"));
-                    stepsList.get(i).setShortDescription(steps.getJSONObject(i).getString("shortDescription"));
-                    stepsList.get(i).setThumbnailURL(steps.getJSONObject(i).getString("thumbnailURL"));
-                    stepsList.get(i).setVideoURL(steps.getJSONObject(i).getString("videoURL"));
+                    int stepID = steps.getJSONObject(j).getInt("id");
+                    String shortDescription = steps.getJSONObject(j).getString("shortDescription");
+                    String description = steps.getJSONObject(j).getString("description");
+                    String thumbnailURL = steps.getJSONObject(j).getString("thumbnailURL");
+                    String videoURL = steps.getJSONObject(j).getString("videoURL");
+                    Steps tempSteps = new Steps(recipeList.get(i).getId(),stepID,shortDescription,description,thumbnailURL,videoURL);
+                    stepsList.add(tempSteps);
+//                    stepsList.add(new Steps(recipeList.get(i).getId()));
+//                    //stepsList.get(i).setId(ingredients.getJSONObject(i).getInt("id"));
+//                    stepsList.get(j).setDescription(steps.getJSONObject(j).getString("description"));
+//                    stepsList.get(j).setShortDescription(steps.getJSONObject(j).getString("shortDescription"));
+//                    stepsList.get(j).setThumbnailURL(steps.getJSONObject(j).getString("thumbnailURL"));
+//                    stepsList.get(j).setVideoURL(steps.getJSONObject(j).getString("videoURL"));
                 }
                 for(int j=0; j< ingredients.length(); j++){
-                    ingredientsList.add(new Ingredients(recipeList.get(i).getId()));
-                    ingredientsList.get(i).setIngredientName(ingredients.getJSONObject(i).getString("ingredient"));
-                    ingredientsList.get(i).setMeasure(ingredients.getJSONObject(i).getString("measure"));
-                    ingredientsList.get(i).setQuantity(ingredients.getJSONObject(i).getString("quantity"));
+                    String ingName = ingredients.getJSONObject(j).getString("ingredient");
+                    String ingMeasure = ingredients.getJSONObject(j).getString("measure");
+                    String ingQuantity = ingredients.getJSONObject(j).getString("quantity");
+                    Ingredients tempIng = new Ingredients(recipeList.get(i).getId(),ingName,ingMeasure,ingQuantity);
+                    ingredientsList.add(tempIng);
                 }
 
                 recipeList.get(i).setNumOfSteps(numOfSteps);

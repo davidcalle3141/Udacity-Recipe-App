@@ -10,14 +10,17 @@ import java.util.List;
 import java.util.Objects;
 
 import calle.david.udacityrecipeapp.AppExecutors;
+import calle.david.udacityrecipeapp.Data.Database.Ingredients;
 import calle.david.udacityrecipeapp.Data.Database.Recipe;
+import calle.david.udacityrecipeapp.Data.Database.Steps;
 
 public class RecipeNetworkDataSource {
     private  static final Object LOCK = new Object();
     private static RecipeNetworkDataSource sInstance;
     private final Context mContext;
 
-    private final MutableLiveData<List<Recipe>> mDownloadedRecipes;
+    private final MutableLiveData<RecipeResponse> mDownloadedRecipes;
+
 
 
     private final AppExecutors mExecutors;
@@ -26,6 +29,7 @@ public class RecipeNetworkDataSource {
         this.mContext = context;
         this.mExecutors = executors;
         mDownloadedRecipes = new MutableLiveData<>();
+
 
     }
 
@@ -39,7 +43,7 @@ public class RecipeNetworkDataSource {
         return  sInstance;
     }
 
-    public LiveData<List<Recipe>> getRecipes(){
+    public LiveData<RecipeResponse> getRecipes(){
         return mDownloadedRecipes;
     }
 
@@ -52,7 +56,7 @@ public class RecipeNetworkDataSource {
                 String RecipeJsonData;
                 RecipeJsonData = NetworkUtils.getStringJSONRecipeNetworkResponse();
                     recipeResponse = new RecipeJsonUtils().parseRecipeJson(RecipeJsonData, mExecutors);
-                mDownloadedRecipes.postValue(recipeResponse.getmRecipes());
+                mDownloadedRecipes.postValue(recipeResponse);
 
             }catch (Exception e){
                 e.printStackTrace();
@@ -62,10 +66,7 @@ public class RecipeNetworkDataSource {
         });
     }
 
-
-
-
-    }
+}
 
 
 
