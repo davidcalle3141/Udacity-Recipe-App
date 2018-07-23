@@ -17,7 +17,7 @@ public class RecipeAppViewModel extends ViewModel {
     private final LiveData<List<Recipe>> mRecipeList;
     private  LiveData<List<Ingredients>> mIngredientsList;
     private  LiveData<List<Steps>> mSteplist;
-    public int b = 9;
+    private MutableLiveData<Recipe> mSelectedRecipe;
 
 
 
@@ -43,4 +43,11 @@ public class RecipeAppViewModel extends ViewModel {
     public LiveData<List<Steps>> getFetchedSteps(){
         return mSteplist;
     }
+    public void setSelectedRecipe(Recipe recipe){
+        mSelectedRecipe.setValue(recipe);
+    }
+    public MutableLiveData<Recipe> getSelectedRecipe(){
+        return mSelectedRecipe;
+    }
+
 }

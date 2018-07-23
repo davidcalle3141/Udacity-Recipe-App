@@ -31,10 +31,23 @@
         android:id="@+id/recipeStepsFragment"
         android:name="calle.david.udacityrecipeapp.UI.Fragments.RecipeStepsFragment"
         android:label="fragment_recipe_steps"
-        tools:layout="@layout/fragment_recipe_steps" >
+        tools:layout="@layout/fragment_recipe_steps_fragment" >
         <argument
             android:name="stepID"
             android:defaultValue="-1"
             app:type="integer" />
+        <action
+            android:id="@+id/action_recipeStepsFragment_to_video_player"
+            app:destination="@id/video_player" />
     </fragment>
+    <fragment
+        android:id="@+id/video_player"
+        android:name="calle.david.udacityrecipeapp.UI.Fragments.RecipeFullScreenVideoFragment"
+        android:label="fragment_video_player"
+        tools:layout="@layout/fragment_video_player">
+        <action
+            android:id="@+id/action_video_player_to_recipeStepsFragment"
+            app:destination="@id/recipeStepsFragment" />
+    </fragment>
+
 </navigation>
