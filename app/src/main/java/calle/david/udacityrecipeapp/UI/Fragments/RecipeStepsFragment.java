@@ -38,6 +38,7 @@ import java.util.Objects;
 import androidx.navigation.Navigation;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import calle.david.udacityrecipeapp.Data.Database.Steps;
 import calle.david.udacityrecipeapp.R;
 import calle.david.udacityrecipeapp.Utilities.InjectorUtils;
@@ -63,10 +64,10 @@ public class RecipeStepsFragment extends Fragment {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+            if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE && mViewModel.isHasVideo()){
+                sendToFullscreenVideo();
+            }
 
-        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
-           sendToFullscreenVideo();
-        }
     }
 
     private void sendToFullscreenVideo() {
@@ -86,9 +87,10 @@ public class RecipeStepsFragment extends Fragment {
     if(savedInstanceState==null){
       this.mView = inflater.inflate(R.layout.fragment_recipe_steps_fragment, container,false);
       this.mContext = getContext();
-
         ButterKnife.bind(this,mView);
+
     }
+
         return mView;
 
     }
@@ -102,6 +104,8 @@ public class RecipeStepsFragment extends Fragment {
         mViewModel = ViewModelProviders.of(getActivity(),factory).get(RecipeAppViewModel.class);
 
         mViewModel.getFocusedStep().observe(this, focusedStep->{
+            cleanUpPlayer();
+            mFrameLayout.setVisibility(View.GONE);
             if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE
                     ) sendToFullscreenVideo();
             else if (focusedStep != null) {
@@ -113,11 +117,40 @@ public class RecipeStepsFragment extends Fragment {
 
 
     }
+    @OnClick(R.id.next_button)
+    public void onNextClick(){
+        mViewModel.getStepsforRecipe().observe(this, stepsList -> {
+            int newPosition;
+            mViewModel.setVideoPosition(0);
+            if (stepsList != null) {
+                newPosition = (mViewModel.getStepNum()+1) % stepsList.size();
 
+            mViewModel.setStepNum(newPosition);
+            mViewModel.getFocusedStep().postValue(stepsList.get(newPosition));}
+        });
+    }
+    @OnClick(R.id.previous_button)
+    public void onPreviousClick(){
+        mViewModel.getStepsforRecipe().observe(this, stepsList -> {
+            int newPosition;
+            mViewModel.setVideoPosition(0);
+            if (stepsList != null) {
+                int a= mViewModel.getStepNum()-1;
+                int b = stepsList.size();
+                newPosition = a < 0 ? b + a : a % b;
+
+                mViewModel.setStepNum(newPosition);
+                mViewModel.getFocusedStep().postValue(stepsList.get(newPosition));}
+        });
+    }
 
     private void populateUI(Steps focusedStep) {
+
         String videoURL = focusedStep.getVideoURL();
-        if(!(videoURL != null && videoURL.equals("")))initializePlayer(videoURL);
+        if(videoURL.equals(""))mViewModel.setHasVideo(false);
+        else mViewModel.setHasVideo(true);
+        if(mViewModel.isHasVideo())initializePlayer(videoURL);
+        else cleanUpPlayer();
         mStepNumTextView.setText("Step: "+Integer.valueOf(focusedStep.getId()));
         mStepLongDescription.setText(focusedStep.getDescription());
     }
@@ -132,7 +165,7 @@ public class RecipeStepsFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        mExoPlayer.setPlayWhenReady(false);
+        if(mExoPlayer!= null)mExoPlayer.setPlayWhenReady(false);
     }
 
     private void initializePlayer(String video){
@@ -145,6 +178,7 @@ public class RecipeStepsFragment extends Fragment {
                float aspectRatio = (float)9/(float)16;
                int height = (int) (width*aspectRatio);
                 mFrameLayout.setLayoutParams(new LinearLayout.LayoutParams((int) width,height));
+                if(mExoPlayer!= null)cleanUpPlayer();
 
                 mExoPlayer = ExoPlayerFactory.newSimpleInstance(
                         new DefaultRenderersFactory(mContext),
@@ -156,7 +190,7 @@ public class RecipeStepsFragment extends Fragment {
                 mExoPlayer.prepare(mediaSource, true, false);
                 if(mViewModel.getVideoPosition()>0)mExoPlayer.seekTo(mViewModel.getVideoPosition());
                 mExoPlayer.setPlayWhenReady(true);
-                mPlayerView.setVisibility(View.VISIBLE);
+                mFrameLayout.setVisibility(View.VISIBLE);
 
             });
 
@@ -166,9 +200,10 @@ public class RecipeStepsFragment extends Fragment {
 
 
     private void cleanUpPlayer(){
+        if(mExoPlayer!=null){
         mPlayerView.setPlayer(null);
         mExoPlayer.release();
-        mExoPlayer = null;
+        mExoPlayer = null;}
     }
 
 

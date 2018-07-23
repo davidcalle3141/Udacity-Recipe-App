@@ -20,6 +20,10 @@ public class RecipeAppViewModel extends ViewModel {
     private MutableLiveData<Recipe> mSelectedRecipe;
     private MutableLiveData<Steps> mFocusedStep;
     private long videoPosition;
+    private int stepListSize;
+    private int stepNum;
+    private boolean hasVideo;
+
 
 
 
@@ -41,7 +45,7 @@ public class RecipeAppViewModel extends ViewModel {
        //if(mIngredientsList == null) mIngredientsList = mRepo.getIngredientsList(recipeID);
        return mIngredientsList;
     }
-    public LiveData<List<Steps>> getStepsforRecipe(int recipeID){
+    public LiveData<List<Steps>> getStepsforRecipe(){
       // if(mSteplist==null) mSteplist = mRepo.getStepsList(recipeID);
         return mSteplist;
     }
@@ -68,5 +72,29 @@ public class RecipeAppViewModel extends ViewModel {
 
     public void setVideoPosition(long videoPosition) {
         this.videoPosition = videoPosition;
+    }
+
+    public int getStepListSize() {
+        return stepListSize;
+    }
+
+    public void setStepListSize(int stepListSize) {
+        this.stepListSize = stepListSize;
+    }
+
+    public int getStepNum() {
+        return stepNum;
+    }
+
+    public void setStepNum(int stepNum) {
+        this.stepNum = stepNum;
+    }
+
+    public boolean isHasVideo() {
+        return hasVideo;
+    }
+
+    public void setHasVideo(boolean hasVideo) {
+        this.hasVideo = hasVideo;
     }
 }

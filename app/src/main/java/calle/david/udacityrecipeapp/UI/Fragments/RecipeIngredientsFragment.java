@@ -160,8 +160,9 @@ public class RecipeIngredientsFragment extends Fragment implements StepListAdapt
         });
 
 
-        mViewModel.getStepsforRecipe(recipeID).observe(this, stepsList -> {
+        mViewModel.getStepsforRecipe().observe(this, stepsList -> {
             if (stepsList != null) {
+                mViewModel.setStepListSize(stepsList.size());
                 stepListAdapter.addStepList(stepsList);
                 stepListAdapter.notifyDataSetChanged();
                 recyclerViewStepDescription.setVisibility(View.VISIBLE);
@@ -176,7 +177,7 @@ public class RecipeIngredientsFragment extends Fragment implements StepListAdapt
         mViewModel.getFetchedSteps().observe(this, stepsList -> {
             if(stepsList!= null){
                 mViewModel.getFocusedStep().setValue(stepsList.get(position));
-
+                mViewModel.setStepNum(position);
                 Navigation.findNavController(view).navigate(R.id.action_recipeIngredientsFragment_to_recipeStepsFragment);
             }
         });

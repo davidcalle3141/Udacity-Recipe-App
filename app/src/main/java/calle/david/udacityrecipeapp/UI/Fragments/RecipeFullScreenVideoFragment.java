@@ -46,6 +46,7 @@ public class RecipeFullScreenVideoFragment extends Fragment {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+        mViewModel.setVideoPosition(mExoPlayer.getCurrentPosition());
         cleanUpPlayer();
         Navigation.findNavController(mView).popBackStack();
     }
@@ -63,10 +64,6 @@ public class RecipeFullScreenVideoFragment extends Fragment {
         mViewModel.getFocusedStep().removeObservers(this);
 
         mViewModel.getFocusedStep().observe(this, this::populateUI);
-        mViewModel.getStepsforRecipe(3).observe(this,boo->{
-            ArrayList<Steps> steps = new ArrayList(boo);
-            mViewModel.getFocusedStep().postValue(boo.get(0));
-        });
 
 
     }
@@ -83,7 +80,7 @@ public class RecipeFullScreenVideoFragment extends Fragment {
     }
 
     private void hideSystemUI() {
-        View decorView = getActivity().getWindow().getDecorView();
+        View decorView = Objects.requireNonNull(getActivity()).getWindow().getDecorView();
         decorView.setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -93,7 +90,7 @@ public class RecipeFullScreenVideoFragment extends Fragment {
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
     private void showSystemUI(){
-        View decorView = getActivity().getWindow().getDecorView();
+        View decorView = Objects.requireNonNull(getActivity()).getWindow().getDecorView();
         decorView.setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_VISIBLE);
 
@@ -141,7 +138,7 @@ public class RecipeFullScreenVideoFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        mExoPlayer.setPlayWhenReady(false);
+        if(mExoPlayer!=null)mExoPlayer.setPlayWhenReady(false);
     }
 
     private void cleanUpPlayer(){

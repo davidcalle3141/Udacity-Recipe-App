@@ -18,13 +18,13 @@
             android:id="@+id/video_frame_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             >
 
         <com.google.android.exoplayer2.ui.PlayerView
             android:id="@+id/step_video_player"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:visibility="gone"
 
             />
         </FrameLayout>
