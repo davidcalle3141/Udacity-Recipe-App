@@ -1,5 +1,6 @@
 package calle.david.udacityrecipeapp.UI.Fragments;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -24,25 +25,28 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 
+import java.util.ArrayList;
+import java.util.Objects;
+
 import androidx.navigation.Navigation;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import calle.david.udacityrecipeapp.Data.Database.Steps;
 import calle.david.udacityrecipeapp.R;
+import calle.david.udacityrecipeapp.Utilities.InjectorUtils;
+import calle.david.udacityrecipeapp.ViewModel.RecipeAppViewModel;
+import calle.david.udacityrecipeapp.ViewModel.RecipeAppViewModelFactory;
 
 
 public class RecipeFullScreenVideoFragment extends Fragment {
-    private final String STATE_RESUME_WINDOW = "resumeWindow";
-    private final String STATE_RESUME_POSITION = "resumePosition";
-    private final String STATE_PLAYER_FULLSCREEN = "playerFullscreen";
-    private int mResumeWindow;
-    private long mResumePosition=0;
     private View mView;
     private Context mContext;
-    private String mVideo;
+    private RecipeAppViewModel mViewModel;
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+        cleanUpPlayer();
         Navigation.findNavController(mView).popBackStack();
     }
 
@@ -50,19 +54,30 @@ public class RecipeFullScreenVideoFragment extends Fragment {
 
     @BindView(R.id.fullscreen_video_player)PlayerView mPlayerView;
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        RecipeAppViewModelFactory factory = InjectorUtils.provideRecipeCardViewFactory(Objects.requireNonNull(getActivity()));
+        mViewModel = ViewModelProviders.of(getActivity(),factory).get(RecipeAppViewModel.class);
+
+        mViewModel.getFocusedStep().removeObservers(this);
+
+        mViewModel.getFocusedStep().observe(this, this::populateUI);
+        mViewModel.getStepsforRecipe(3).observe(this,boo->{
+            ArrayList<Steps> steps = new ArrayList(boo);
+            mViewModel.getFocusedStep().postValue(boo.get(0));
+        });
+
+
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         this.mView= inflater.inflate(R.layout.fragment_video_player,container,false);
         this.mContext = getContext();
         ButterKnife.bind(this,mView);
-        if (getArguments() != null) {
-            mVideo = getArguments().getString("video");
-            mResumePosition = getArguments().getLong("position");
-
-        }
         hideSystemUI();
-        populateUI();
         return mView;
 
     }
@@ -88,16 +103,17 @@ public class RecipeFullScreenVideoFragment extends Fragment {
     }
 
 
-    private void populateUI() {
+    private void populateUI(Steps focusedStep) {
+
         mExoPlayer = ExoPlayerFactory.newSimpleInstance(
                 new DefaultRenderersFactory(mContext),
                 new DefaultTrackSelector(),
                 new DefaultLoadControl());
         mPlayerView.setPlayer(mExoPlayer);
-        Uri uri = Uri.parse(mVideo);
+        Uri uri = Uri.parse(focusedStep.getVideoURL());
         MediaSource mediaSource = buildMediaSource(uri);
         mExoPlayer.prepare(mediaSource, true, false);
-        if(mResumePosition != 0)mExoPlayer.seekTo(mResumePosition);
+        if(mViewModel.getVideoPosition() != 0)mExoPlayer.seekTo(mViewModel.getVideoPosition());
         mExoPlayer.setPlayWhenReady(true);
 
     }
@@ -115,6 +131,19 @@ public class RecipeFullScreenVideoFragment extends Fragment {
                 new DefaultHttpDataSourceFactory("RecipeAPP")).
                 createMediaSource(uri);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(mExoPlayer!=null)mExoPlayer.setPlayWhenReady(true);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mExoPlayer.setPlayWhenReady(false);
+    }
+
     private void cleanUpPlayer(){
         mPlayerView.setPlayer(null);
         mExoPlayer.release();

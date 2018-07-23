@@ -13,9 +13,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+
 import androidx.navigation.Navigation;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import calle.david.udacityrecipeapp.Data.Database.Steps;
 import calle.david.udacityrecipeapp.R;
 import calle.david.udacityrecipeapp.UI.Adapters.RecipeCardAdapter;
 import calle.david.udacityrecipeapp.Utilities.InjectorUtils;
@@ -63,6 +66,7 @@ public class RecipeCardsViewFragment extends Fragment implements RecipeCardAdapt
         RecipeAppViewModelFactory factory = InjectorUtils.provideRecipeCardViewFactory(getActivity());
         mViewModel = ViewModelProviders.of(getActivity(),factory).get(RecipeAppViewModel.class);
         populateUI();
+
     }
 
 
@@ -86,12 +90,9 @@ public class RecipeCardsViewFragment extends Fragment implements RecipeCardAdapt
     public void onItemClick(int position) {
 
         mViewModel.getRecipeList().observe(this, recipes -> {
-            Bundle bundle = new Bundle();
-            Log.d("CLICK", String.valueOf(recipes.get(position).getId()));
-            bundle.putInt("recipeID", recipes.get(position).getId());
-            bundle.putString("recipeImage", recipes.get(position).getImage());
-            bundle.putString("recipeName", recipes.get(position).getName());
-            Navigation.findNavController(view).navigate(R.id.action_recipeCardsViewFragment_to_recipeIngredientsFragment,bundle);
+            if(recipes!=null)
+            mViewModel.setSelectedRecipe(recipes.get(position));
+            Navigation.findNavController(view).navigate(R.id.action_recipeCardsViewFragment_to_recipeIngredientsFragment);
 
         });
 

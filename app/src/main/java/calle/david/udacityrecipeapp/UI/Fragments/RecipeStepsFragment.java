@@ -1,5 +1,6 @@
 package calle.david.udacityrecipeapp.UI.Fragments;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
@@ -27,15 +29,20 @@ import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import androidx.navigation.Navigation;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import calle.david.udacityrecipeapp.Data.Database.Steps;
 import calle.david.udacityrecipeapp.R;
+import calle.david.udacityrecipeapp.Utilities.InjectorUtils;
 import calle.david.udacityrecipeapp.ViewModel.RecipeAppViewModel;
+import calle.david.udacityrecipeapp.ViewModel.RecipeAppViewModelFactory;
 import okhttp3.internal.Util;
 
 
@@ -43,13 +50,11 @@ public class RecipeStepsFragment extends Fragment {
     private View mView;
     private RecipeAppViewModel mViewModel;
     private Context mContext;
-    private int mRecipeID;
-    private ExoPlayer mExoPlayer;
-    private String mImage;
-    private String mVideo;
-    private ArrayList<Steps> stepsArrayList;
-    private int stepNum;
 
+    private ExoPlayer mExoPlayer;
+
+    @BindView(R.id.step_number)TextView mStepNumTextView;
+    @BindView(R.id.step_card_long_description)TextView mStepLongDescription;
     @BindView(R.id.step_video_player)PlayerView mPlayerView;
     @BindView(R.id.video_frame_layout)FrameLayout mFrameLayout;
     @BindView(R.id.recipe_video_step_card)CardView cardView;
@@ -65,17 +70,14 @@ public class RecipeStepsFragment extends Fragment {
     }
 
     private void sendToFullscreenVideo() {
-        long position = 0;
 
         if(mExoPlayer!=null) {
-            position = mExoPlayer.getCurrentPosition();
+            mViewModel.setVideoPosition(mExoPlayer.getCurrentPosition());
             cleanUpPlayer();
         }
 
-        Bundle bundle = new Bundle();
-        bundle.putString("video", mVideo);
-        bundle.putLong("position", position);
-        Navigation.findNavController(mView).navigate(R.id.action_recipeStepsFragment_to_video_player,bundle);
+
+        Navigation.findNavController(mView).navigate(R.id.action_recipeStepsFragment_to_video_player);
     }
 
     @Nullable
@@ -84,15 +86,6 @@ public class RecipeStepsFragment extends Fragment {
     if(savedInstanceState==null){
       this.mView = inflater.inflate(R.layout.fragment_recipe_steps_fragment, container,false);
       this.mContext = getContext();
-        if (getArguments() != null) {
-
-            this.stepsArrayList = getArguments().getParcelableArrayList("stepList");
-            this.stepNum = getArguments().getInt("position");
-            this.mRecipeID = stepsArrayList.get(stepNum).getRecipeID();
-            this.mVideo = stepsArrayList.get(stepNum).getVideoURL();
-
-
-        }
 
         ButterKnife.bind(this,mView);
     }
@@ -105,23 +98,44 @@ public class RecipeStepsFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE
-                ) sendToFullscreenVideo();
-        else populateUI();
+        RecipeAppViewModelFactory factory = InjectorUtils.provideRecipeCardViewFactory(Objects.requireNonNull(getActivity()));
+        mViewModel = ViewModelProviders.of(getActivity(),factory).get(RecipeAppViewModel.class);
+
+        mViewModel.getFocusedStep().observe(this, focusedStep->{
+            if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE
+                    ) sendToFullscreenVideo();
+            else if (focusedStep != null) {
+                populateUI(focusedStep);
+            }
+
+        });
+
 
 
     }
 
 
-    private void populateUI() {
-
-        if(!(mVideo != null && mVideo.equals("")))initializePlayer();
-
-
-
+    private void populateUI(Steps focusedStep) {
+        String videoURL = focusedStep.getVideoURL();
+        if(!(videoURL != null && videoURL.equals("")))initializePlayer(videoURL);
+        mStepNumTextView.setText("Step: "+Integer.valueOf(focusedStep.getId()));
+        mStepLongDescription.setText(focusedStep.getDescription());
     }
 
-    private void initializePlayer(){
+    @Override
+    public void onResume() {
+        super.onResume();
+
+       if(mExoPlayer!=null) mExoPlayer.setPlayWhenReady(true);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mExoPlayer.setPlayWhenReady(false);
+    }
+
+    private void initializePlayer(String video){
             //it takes time for wrap content(height) on player view to calculate the height
             //so before it could calculate the height it would take up the whole screen then wrap the actuall height of video
             //this waits for mview to render and calculates height based on the view width and the video player matches parent
@@ -137,9 +151,10 @@ public class RecipeStepsFragment extends Fragment {
                         new DefaultTrackSelector(),
                         new DefaultLoadControl());
                 mPlayerView.setPlayer(mExoPlayer);
-                Uri uri = Uri.parse(mVideo);
+                Uri uri = Uri.parse(video);
                 MediaSource mediaSource = buildMediaSource(uri);
                 mExoPlayer.prepare(mediaSource, true, false);
+                if(mViewModel.getVideoPosition()>0)mExoPlayer.seekTo(mViewModel.getVideoPosition());
                 mExoPlayer.setPlayWhenReady(true);
                 mPlayerView.setVisibility(View.VISIBLE);
 

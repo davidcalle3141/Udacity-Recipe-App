@@ -28,6 +28,7 @@ import java.util.Objects;
 import androidx.navigation.Navigation;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import calle.david.udacityrecipeapp.Data.Database.Recipe;
 import calle.david.udacityrecipeapp.R;
 import calle.david.udacityrecipeapp.UI.Adapters.IngredientListAdapter;
 import calle.david.udacityrecipeapp.UI.Adapters.StepListAdapter;
@@ -100,8 +101,8 @@ public class RecipeIngredientsFragment extends Fragment implements StepListAdapt
         RecipeAppViewModelFactory factory = InjectorUtils.provideRecipeCardViewFactory(Objects.requireNonNull(getActivity()));
         mViewModel = ViewModelProviders.of(getActivity(),factory).get(RecipeAppViewModel.class);
 
+        mViewModel.getSelectedRecipe().observe(this, this::populateUI);
 
-        populateUI();
         }
 
     @Override
@@ -140,19 +141,17 @@ public class RecipeIngredientsFragment extends Fragment implements StepListAdapt
 
 
 
-    private void populateUI() {
-        //mViewModel.getIngredientsforRecipe(recipeID).removeObservers(this);
+    private void populateUI(Recipe recipe) {
+        int recipeID = recipe.getId();
+        String name = recipe.getName();
+        String image = recipe.getImage();
 
-
-        if (getArguments() != null) {
-            this.recipeID = getArguments().getInt("recipeID");
-            recipeName.setText(getArguments().getString("recipeName"));
-            Picasso.get().load(getArguments().getString("recipeImage")).into(recipeImage);
-        }
+        recipeName.setText(name);
+        Picasso.get().load(image).into(recipeImage);
 
 
         mViewModel.getIngredientsforRecipe(recipeID).observe(this, ingredients -> {
-            if(ingredients!=null){
+            if (ingredients != null) {
                 ingredientListAdapter.addIngredientsList(ingredients);
                 ingredientListAdapter.notifyDataSetChanged();
 
@@ -162,7 +161,7 @@ public class RecipeIngredientsFragment extends Fragment implements StepListAdapt
 
 
         mViewModel.getStepsforRecipe(recipeID).observe(this, stepsList -> {
-            if(stepsList!= null){
+            if (stepsList != null) {
                 stepListAdapter.addStepList(stepsList);
                 stepListAdapter.notifyDataSetChanged();
                 recyclerViewStepDescription.setVisibility(View.VISIBLE);
@@ -176,12 +175,9 @@ public class RecipeIngredientsFragment extends Fragment implements StepListAdapt
     public void onClick(int position) {
         mViewModel.getFetchedSteps().observe(this, stepsList -> {
             if(stepsList!= null){
-               ArrayList tempList = new ArrayList(stepsList);
-               Bundle bundle = new Bundle();
-               bundle.putInt("position",position);
-               bundle.putParcelableArrayList("stepList", (ArrayList<? extends Parcelable>) tempList);
+                mViewModel.getFocusedStep().setValue(stepsList.get(position));
 
-                Navigation.findNavController(view).navigate(R.id.action_recipeIngredientsFragment_to_recipeStepsFragment,bundle);
+                Navigation.findNavController(view).navigate(R.id.action_recipeIngredientsFragment_to_recipeStepsFragment);
             }
         });
 
