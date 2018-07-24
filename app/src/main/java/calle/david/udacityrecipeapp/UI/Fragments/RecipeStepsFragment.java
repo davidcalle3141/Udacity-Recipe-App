@@ -51,8 +51,8 @@ public class RecipeStepsFragment extends Fragment {
     private View mView;
     private RecipeAppViewModel mViewModel;
     private Context mContext;
-
     private ExoPlayer mExoPlayer;
+    private static Boolean  viewHasbeenCreatedBefore;
 
     @BindView(R.id.step_number)TextView mStepNumTextView;
     @BindView(R.id.step_card_long_description)TextView mStepLongDescription;
@@ -60,11 +60,16 @@ public class RecipeStepsFragment extends Fragment {
     @BindView(R.id.video_frame_layout)FrameLayout mFrameLayout;
     @BindView(R.id.recipe_video_step_card)CardView cardView;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        viewHasbeenCreatedBefore = false;
+    }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-            if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE && mViewModel.isHasVideo()){
+            if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE && mViewModel.isHasVideo() ){
                 sendToFullscreenVideo();
             }
 
@@ -76,21 +81,18 @@ public class RecipeStepsFragment extends Fragment {
             mViewModel.setVideoPosition(mExoPlayer.getCurrentPosition());
             cleanUpPlayer();
         }
-
-
         Navigation.findNavController(mView).navigate(R.id.action_recipeStepsFragment_to_video_player);
+
+
+
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-    if(savedInstanceState==null){
       this.mView = inflater.inflate(R.layout.fragment_recipe_steps_fragment, container,false);
       this.mContext = getContext();
         ButterKnife.bind(this,mView);
-
-    }
-
         return mView;
 
     }
@@ -101,14 +103,18 @@ public class RecipeStepsFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         RecipeAppViewModelFactory factory = InjectorUtils.provideRecipeCardViewFactory(Objects.requireNonNull(getActivity()));
-        mViewModel = ViewModelProviders.of(getActivity(),factory).get(RecipeAppViewModel.class);
 
+        mViewModel = ViewModelProviders.of(getActivity(),factory).get(RecipeAppViewModel.class);
+        mViewModel.getFocusedStep().removeObservers(this);
         mViewModel.getFocusedStep().observe(this, focusedStep->{
             cleanUpPlayer();
+            if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && !viewHasbeenCreatedBefore){
+                viewHasbeenCreatedBefore = true;
+                sendToFullscreenVideo();}
+
+
             mFrameLayout.setVisibility(View.GONE);
-            if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE
-                    ) sendToFullscreenVideo();
-            else if (focusedStep != null) {
+            if (focusedStep != null) {
                 populateUI(focusedStep);
             }
 

@@ -26,6 +26,9 @@
             android:name="recipeID"
             android:defaultValue="-1"
             app:type="integer" />
+        <action
+            android:id="@+id/action_recipeIngredientsFragment_to_video_player"
+            app:destination="@id/video_player" />
     </fragment>
     <fragment
         android:id="@+id/recipeStepsFragment"
@@ -46,8 +49,9 @@
         android:label="fragment_video_player"
         tools:layout="@layout/fragment_video_player">
         <action
-            android:id="@+id/action_video_player_to_recipeStepsFragment"
-            app:destination="@id/recipeStepsFragment" />
+            android:id="@+id/action_video_player_to_recipeIngredientsFragment"
+            app:destination="@+id/recipeIngredientsFragment"
+            app:popUpTo="@id/recipeIngredientsFragment" />
     </fragment>
 
 </navigation>

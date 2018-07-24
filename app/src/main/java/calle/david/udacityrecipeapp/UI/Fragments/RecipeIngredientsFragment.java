@@ -2,27 +2,24 @@ package calle.david.udacityrecipeapp.UI.Fragments;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 import androidx.navigation.Navigation;
@@ -49,7 +46,7 @@ public class RecipeIngredientsFragment extends Fragment implements StepListAdapt
     IngredientListAdapter ingredientListAdapter;
     StepListAdapter stepListAdapter;
 
-    @BindView(R.id.ingredients_scroll_view)NestedScrollView scrollView;
+    @BindView(R.id.ingredients_master_list_fragment)NestedScrollView scrollView;
     @BindView(R.id.ingredientsListRV)RecyclerView recyclerViewIngredientsList;
     @BindView(R.id.ingredientsListStepsRV)RecyclerView recyclerViewStepDescription;
     @BindView(R.id.ingredients_card_name)TextView recipeName;
@@ -178,10 +175,18 @@ public class RecipeIngredientsFragment extends Fragment implements StepListAdapt
             if(stepsList!= null){
                 mViewModel.getFocusedStep().setValue(stepsList.get(position));
                 mViewModel.setStepNum(position);
+                if(isLandscape())Navigation.findNavController(view).navigate(R.id.action_recipeIngredientsFragment_to_video_player);
                 Navigation.findNavController(view).navigate(R.id.action_recipeIngredientsFragment_to_recipeStepsFragment);
             }
         });
 
 
+    }
+
+    private Boolean isLandscape(){
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            return true;
+        }
+        return false;
     }
 }

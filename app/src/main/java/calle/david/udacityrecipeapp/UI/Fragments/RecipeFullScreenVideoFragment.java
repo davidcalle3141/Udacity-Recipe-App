@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.FrameLayout;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
@@ -28,6 +29,8 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import androidx.navigation.NavAction;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,17 +46,10 @@ public class RecipeFullScreenVideoFragment extends Fragment {
     private Context mContext;
     private RecipeAppViewModel mViewModel;
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mViewModel.setVideoPosition(mExoPlayer.getCurrentPosition());
-        cleanUpPlayer();
-        Navigation.findNavController(mView).popBackStack();
-    }
-
     private ExoPlayer mExoPlayer;
 
     @BindView(R.id.fullscreen_video_player)PlayerView mPlayerView;
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -79,6 +75,22 @@ public class RecipeFullScreenVideoFragment extends Fragment {
 
     }
 
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mViewModel.setVideoPosition(mExoPlayer.getCurrentPosition());
+        cleanUpPlayer();
+        Navigation.findNavController(mView).popBackStack();
+    }
+
+    private Boolean isLandscape(){
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            return true;
+        }
+        return false;
+    }
+
     private void hideSystemUI() {
         View decorView = Objects.requireNonNull(getActivity()).getWindow().getDecorView();
         decorView.setSystemUiVisibility(
@@ -93,9 +105,6 @@ public class RecipeFullScreenVideoFragment extends Fragment {
         View decorView = Objects.requireNonNull(getActivity()).getWindow().getDecorView();
         decorView.setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_VISIBLE);
-
-
-
 
     }
 
@@ -116,11 +125,19 @@ public class RecipeFullScreenVideoFragment extends Fragment {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        int b = 9;
+        if(isLandscape())Navigation.findNavController(mView).popBackStack();
+
+    }
+
+    @Override
     public void onDestroy() {
-        super.onDestroy();
+        showSystemUI();
         super.onDestroy();
         if(mExoPlayer!=null)cleanUpPlayer();
-        showSystemUI();
+
     }
 
     private MediaSource buildMediaSource(Uri uri) {
