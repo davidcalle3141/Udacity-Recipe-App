@@ -176,7 +176,7 @@ public class RecipeIngredientsFragment extends Fragment implements StepListAdapt
                 mViewModel.getFocusedStep().setValue(stepsList.get(position));
                 mViewModel.setStepNum(position);
                 if(isLandscape())Navigation.findNavController(view).navigate(R.id.action_recipeIngredientsFragment_to_video_player);
-                Navigation.findNavController(view).navigate(R.id.action_recipeIngredientsFragment_to_recipeStepsFragment);
+                else Navigation.findNavController(view).navigate(R.id.action_recipeIngredientsFragment_to_recipeStepsFragment);
             }
         });
 

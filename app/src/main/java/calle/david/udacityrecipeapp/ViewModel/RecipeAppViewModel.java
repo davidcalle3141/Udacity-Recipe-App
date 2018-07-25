@@ -47,9 +47,11 @@ public class RecipeAppViewModel extends ViewModel {
     }
     public LiveData<List<Steps>> getStepsforRecipe(){
       // if(mSteplist==null) mSteplist = mRepo.getStepsList(recipeID);
+
         return mSteplist;
     }
     public LiveData<List<Steps>> getFetchedSteps(){
+        videoPosition = 0;
         return mSteplist;
     }
     public void setSelectedRecipe(Recipe recipe){

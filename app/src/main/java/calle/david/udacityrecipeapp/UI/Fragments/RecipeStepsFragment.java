@@ -52,7 +52,6 @@ public class RecipeStepsFragment extends Fragment {
     private RecipeAppViewModel mViewModel;
     private Context mContext;
     private ExoPlayer mExoPlayer;
-    private static Boolean  viewHasbeenCreatedBefore;
 
     @BindView(R.id.step_number)TextView mStepNumTextView;
     @BindView(R.id.step_card_long_description)TextView mStepLongDescription;
@@ -60,11 +59,7 @@ public class RecipeStepsFragment extends Fragment {
     @BindView(R.id.video_frame_layout)FrameLayout mFrameLayout;
     @BindView(R.id.recipe_video_step_card)CardView cardView;
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        viewHasbeenCreatedBefore = false;
-    }
+
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -108,15 +103,8 @@ public class RecipeStepsFragment extends Fragment {
         mViewModel.getFocusedStep().removeObservers(this);
         mViewModel.getFocusedStep().observe(this, focusedStep->{
             cleanUpPlayer();
-            if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && !viewHasbeenCreatedBefore){
-                viewHasbeenCreatedBefore = true;
-                sendToFullscreenVideo();}
-
-
             mFrameLayout.setVisibility(View.GONE);
-            if (focusedStep != null) {
-                populateUI(focusedStep);
-            }
+            if (focusedStep != null) populateUI(focusedStep);
 
         });
 
@@ -132,7 +120,12 @@ public class RecipeStepsFragment extends Fragment {
                 newPosition = (mViewModel.getStepNum()+1) % stepsList.size();
 
             mViewModel.setStepNum(newPosition);
-            mViewModel.getFocusedStep().postValue(stepsList.get(newPosition));}
+            mViewModel.getFocusedStep().postValue(stepsList.get(newPosition));
+            if(stepsList.get(newPosition).getVideoURL().equals(""))mViewModel.setHasVideo(false);
+            else mViewModel.setHasVideo(true);
+            if(mViewModel.isHasVideo() && isLandscape()) sendToFullscreenVideo();
+            }
+
         });
     }
     @OnClick(R.id.previous_button)
@@ -225,5 +218,12 @@ public class RecipeStepsFragment extends Fragment {
         return  new ExtractorMediaSource.Factory(
                 new DefaultHttpDataSourceFactory("RecipeAPP")).
                 createMediaSource(uri);
+    }
+
+    private Boolean isLandscape(){
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            return true;
+        }
+        return false;
     }
 }

@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
+import android.support.v4.app.NavUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,7 +82,7 @@ public class RecipeFullScreenVideoFragment extends Fragment {
         super.onConfigurationChanged(newConfig);
         mViewModel.setVideoPosition(mExoPlayer.getCurrentPosition());
         cleanUpPlayer();
-        Navigation.findNavController(mView).popBackStack();
+        Navigation.findNavController(mView).navigate(R.id.action_video_player_to_recipeStepsFragment);
     }
 
     private Boolean isLandscape(){
@@ -127,8 +128,7 @@ public class RecipeFullScreenVideoFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        int b = 9;
-        if(isLandscape())Navigation.findNavController(mView).popBackStack();
+        if(isLandscape())Navigation.findNavController(mView).navigate(R.id.action_video_player_to_recipeIngredientsFragment);
 
     }
 
