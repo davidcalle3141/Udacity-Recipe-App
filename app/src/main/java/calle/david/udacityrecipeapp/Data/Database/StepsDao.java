@@ -12,7 +12,7 @@ import static android.arch.persistence.room.OnConflictStrategy.ABORT;
 
 @Dao
 public interface StepsDao {
-    @Insert(onConflict = ABORT)
+    @Insert()
     void bulkInsert(List<Steps > steps);
 
     @Query("SELECT * FROM Steps WHERE recipeID = :recipeID ORDER BY id")

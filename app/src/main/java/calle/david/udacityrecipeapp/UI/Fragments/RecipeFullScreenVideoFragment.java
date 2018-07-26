@@ -84,12 +84,34 @@ public class RecipeFullScreenVideoFragment extends Fragment {
         cleanUpPlayer();
         Navigation.findNavController(mView).navigate(R.id.action_video_player_to_recipeStepsFragment);
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(mExoPlayer!=null)mExoPlayer.setPlayWhenReady(true);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(mExoPlayer!=null)mExoPlayer.setPlayWhenReady(false);
+    }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if(isLandscape())Navigation.findNavController(mView).navigate(R.id.action_video_player_to_recipeIngredientsFragment);
+
+    }
+
+    @Override
+    public void onDestroy() {
+        showSystemUI();
+        super.onDestroy();
+        if(mExoPlayer!=null)cleanUpPlayer();
+
+    }
 
     private Boolean isLandscape(){
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-            return true;
-        }
-        return false;
+        return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
     private void hideSystemUI() {
@@ -125,20 +147,6 @@ public class RecipeFullScreenVideoFragment extends Fragment {
 
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if(isLandscape())Navigation.findNavController(mView).navigate(R.id.action_video_player_to_recipeIngredientsFragment);
-
-    }
-
-    @Override
-    public void onDestroy() {
-        showSystemUI();
-        super.onDestroy();
-        if(mExoPlayer!=null)cleanUpPlayer();
-
-    }
 
     private MediaSource buildMediaSource(Uri uri) {
         return  new ExtractorMediaSource.Factory(
@@ -146,17 +154,7 @@ public class RecipeFullScreenVideoFragment extends Fragment {
                 createMediaSource(uri);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if(mExoPlayer!=null)mExoPlayer.setPlayWhenReady(true);
-    }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        if(mExoPlayer!=null)mExoPlayer.setPlayWhenReady(false);
-    }
 
     private void cleanUpPlayer(){
         mPlayerView.setPlayer(null);

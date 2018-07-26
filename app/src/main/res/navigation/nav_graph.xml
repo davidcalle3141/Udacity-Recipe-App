@@ -9,7 +9,7 @@
         android:id="@+id/recipeCardsViewFragment"
         android:name="calle.david.udacityrecipeapp.UI.Fragments.RecipeCardsViewFragment"
         android:label="fragment_recipe_cards_fragment"
-        tools:layout="@layout/fragment_recipe_cards_fragment" >
+        tools:layout="@layout/fragment_recipe_cards_fragment">
         <action
             android:id="@+id/action_recipeCardsViewFragment_to_recipeIngredientsFragment"
             app:destination="@id/recipeIngredientsFragment"
@@ -25,15 +25,12 @@
         tools:layout="@layout/fragment_recipe_ingredients_fragment" >
         <action
             android:id="@+id/action_recipeIngredientsFragment_to_recipeStepsFragment"
-            app:destination="@id/recipeStepsFragment"
+            app:destination="@+id/recipeStepsFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
-        <argument
-            android:name="recipeID"
-            android:defaultValue="-1"
-            app:type="integer" />
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            />
         <action
             android:id="@+id/action_recipeIngredientsFragment_to_video_player"
             app:destination="@id/video_player"
@@ -47,13 +44,15 @@
         android:name="calle.david.udacityrecipeapp.UI.Fragments.RecipeStepsFragment"
         android:label="fragment_recipe_steps"
         tools:layout="@layout/fragment_recipe_steps_fragment" >
-        <argument
-            android:name="stepID"
-            android:defaultValue="-1"
-            app:type="integer" />
         <action
             android:id="@+id/action_recipeStepsFragment_to_video_player"
             app:destination="@id/video_player" />
+        <action
+            android:id="@+id/action_recipeStepsFragment_to_recipeIngredientsFragment2"
+            app:destination="@+id/recipeIngredientsFragment"
+            app:launchSingleTop="false"
+            app:popUpTo="@+id/recipeIngredientsFragment"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/video_player"
@@ -63,7 +62,7 @@
         <action
             android:id="@+id/action_video_player_to_recipeIngredientsFragment"
             app:destination="@+id/recipeIngredientsFragment"
-            app:popUpTo="@id/recipeIngredientsFragment" />
+            app:popUpTo="@+id/recipeIngredientsFragment" />
         <action
             android:id="@+id/action_video_player_to_recipeStepsFragment"
             app:destination="@id/recipeStepsFragment"

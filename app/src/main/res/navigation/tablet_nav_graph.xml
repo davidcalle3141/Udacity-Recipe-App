@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tablet_nav_graph"
+    app:startDestination="@id/recipeCardsViewFragment">
+
+
+    <fragment
+        android:id="@+id/recipeCardsViewFragment"
+        android:name="calle.david.udacityrecipeapp.UI.Fragments.RecipeCardsViewFragment"
+        android:label="fragment_recipe_cards_fragment"
+        tools:layout="@layout/fragment_recipe_cards_fragment" >
+        <action
+            android:id="@+id/action_recipeCardsViewFragment_to_master_list_fragment"
+            app:destination="@id/master_list_fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/master_list_fragment"
+        android:name="calle.david.udacityrecipeapp.UI.Fragments.MasterListFragment"
+        android:label="fragment_master_list_fragment"
+        tools:layout="@layout/fragment_master_list_fragment" />
+</navigation>

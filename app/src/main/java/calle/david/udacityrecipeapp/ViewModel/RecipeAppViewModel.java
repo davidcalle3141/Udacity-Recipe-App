@@ -3,6 +3,7 @@ package calle.david.udacityrecipeapp.ViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.support.annotation.NonNull;
 
 import java.util.List;
 

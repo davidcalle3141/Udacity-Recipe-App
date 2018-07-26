@@ -13,7 +13,7 @@ public class RecipeAppViewModelFactory extends ViewModelProvider.NewInstanceFact
     }
 
     @NonNull
-    @SuppressWarnings("Unchecked")
+    @SuppressWarnings({"Unchecked", "unchecked"})
     @Override
     public <T extends ViewModel> T create(Class<T> modelClass){
         return (T) new RecipeAppViewModel(mRepo);

@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -58,35 +59,20 @@ public class RecipeStepsFragment extends Fragment {
     @BindView(R.id.step_video_player)PlayerView mPlayerView;
     @BindView(R.id.video_frame_layout)FrameLayout mFrameLayout;
     @BindView(R.id.recipe_video_step_card)CardView cardView;
+    @BindView(R.id.next_button)Button nextButton;
+    @BindView(R.id.previous_button)Button prevButton;
+    private boolean isTwoPane=false;
 
-
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-            if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE && mViewModel.isHasVideo() ){
-                sendToFullscreenVideo();
-            }
+    public RecipeStepsFragment(){
 
     }
 
-    private void sendToFullscreenVideo() {
-
-        if(mExoPlayer!=null) {
-            mViewModel.setVideoPosition(mExoPlayer.getCurrentPosition());
-            cleanUpPlayer();
-        }
-        Navigation.findNavController(mView).navigate(R.id.action_recipeStepsFragment_to_video_player);
-
-
-
-    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-      this.mView = inflater.inflate(R.layout.fragment_recipe_steps_fragment, container,false);
-      this.mContext = getContext();
+        this.mView = inflater.inflate(R.layout.fragment_recipe_steps_fragment, container,false);
+        this.mContext = getContext();
         ButterKnife.bind(this,mView);
         return mView;
 
@@ -101,16 +87,71 @@ public class RecipeStepsFragment extends Fragment {
 
         mViewModel = ViewModelProviders.of(getActivity(),factory).get(RecipeAppViewModel.class);
         mViewModel.getFocusedStep().removeObservers(this);
+
         mViewModel.getFocusedStep().observe(this, focusedStep->{
             cleanUpPlayer();
             mFrameLayout.setVisibility(View.GONE);
-            if (focusedStep != null) populateUI(focusedStep);
+            if (focusedStep != null)
+                populateUI(focusedStep);
 
         });
 
 
 
     }
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if(Objects.requireNonNull(getActivity()).findViewById(R.id.twoPane)!=null){
+            isTwoPane = true;
+//            nextButton.setVisibility(View.GONE);
+//            prevButton.setVisibility(View.GONE);
+        }
+    }
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+            if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE && mViewModel.isHasVideo() && !isTwoPane ){
+                sendToFullscreenVideo();
+            }
+            if(isTwoPane && mExoPlayer!=null){
+                mViewModel.setVideoPosition(mExoPlayer.getCurrentPosition());
+                onActivityCreated(null);
+            }
+
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if(mExoPlayer!=null) mExoPlayer.setPlayWhenReady(true);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(mExoPlayer!= null)mExoPlayer.setPlayWhenReady(false);
+    }
+
+    private void sendToFullscreenVideo() {
+        if(isTwoPane ) return;
+        if(mExoPlayer!=null) {
+            mViewModel.setVideoPosition(mExoPlayer.getCurrentPosition());
+            cleanUpPlayer();
+        }
+        Navigation.findNavController(mView).navigate(R.id.action_recipeStepsFragment_to_video_player);
+
+
+
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(mExoPlayer!=null)cleanUpPlayer();
+
+    }
+
+
     @OnClick(R.id.next_button)
     public void onNextClick(){
         mViewModel.getStepsforRecipe().observe(this, stepsList -> {
@@ -123,7 +164,7 @@ public class RecipeStepsFragment extends Fragment {
             mViewModel.getFocusedStep().postValue(stepsList.get(newPosition));
             if(stepsList.get(newPosition).getVideoURL().equals(""))mViewModel.setHasVideo(false);
             else mViewModel.setHasVideo(true);
-            if(mViewModel.isHasVideo() && isLandscape()) sendToFullscreenVideo();
+            if(mViewModel.isHasVideo() && isLandscape() && !isTwoPane) sendToFullscreenVideo();
             }
 
         });
@@ -154,18 +195,6 @@ public class RecipeStepsFragment extends Fragment {
         mStepLongDescription.setText(focusedStep.getDescription());
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-       if(mExoPlayer!=null) mExoPlayer.setPlayWhenReady(true);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if(mExoPlayer!= null)mExoPlayer.setPlayWhenReady(false);
-    }
 
     private void initializePlayer(String video){
             //it takes time for wrap content(height) on player view to calculate the height
@@ -176,20 +205,20 @@ public class RecipeStepsFragment extends Fragment {
                float width= mView.getWidth()- marginOffset*2;
                float aspectRatio = (float)9/(float)16;
                int height = (int) (width*aspectRatio);
-                mFrameLayout.setLayoutParams(new LinearLayout.LayoutParams((int) width,height));
-                if(mExoPlayer!= null)cleanUpPlayer();
+               mFrameLayout.setLayoutParams(new LinearLayout.LayoutParams((int) width,height));
+               if(mExoPlayer!= null)cleanUpPlayer();
 
-                mExoPlayer = ExoPlayerFactory.newSimpleInstance(
+               mExoPlayer = ExoPlayerFactory.newSimpleInstance(
                         new DefaultRenderersFactory(mContext),
                         new DefaultTrackSelector(),
                         new DefaultLoadControl());
-                mPlayerView.setPlayer(mExoPlayer);
-                Uri uri = Uri.parse(video);
-                MediaSource mediaSource = buildMediaSource(uri);
-                mExoPlayer.prepare(mediaSource, true, false);
-                if(mViewModel.getVideoPosition()>0)mExoPlayer.seekTo(mViewModel.getVideoPosition());
-                mExoPlayer.setPlayWhenReady(true);
-                mFrameLayout.setVisibility(View.VISIBLE);
+               mPlayerView.setPlayer(mExoPlayer);
+               Uri uri = Uri.parse(video);
+               MediaSource mediaSource = buildMediaSource(uri);
+               mExoPlayer.prepare(mediaSource, false, false);
+               if(mViewModel.getVideoPosition()>0)mExoPlayer.seekTo(mViewModel.getVideoPosition());
+               mExoPlayer.setPlayWhenReady(true);
+               mFrameLayout.setVisibility(View.VISIBLE);
 
             });
 
@@ -205,15 +234,6 @@ public class RecipeStepsFragment extends Fragment {
         mExoPlayer = null;}
     }
 
-
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if(mExoPlayer!=null)cleanUpPlayer();
-
-    }
-
     private MediaSource buildMediaSource(Uri uri){
         return  new ExtractorMediaSource.Factory(
                 new DefaultHttpDataSourceFactory("RecipeAPP")).
@@ -221,9 +241,6 @@ public class RecipeStepsFragment extends Fragment {
     }
 
     private Boolean isLandscape(){
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-            return true;
-        }
-        return false;
+        return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 }

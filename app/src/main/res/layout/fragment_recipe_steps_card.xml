@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/recipe_video_step_card"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="@dimen/card_view_margin"
     android:elevation="@dimen/card_elevation"
     card_view:cardCornerRadius="@dimen/card_corner_radius"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     >
 
     <LinearLayout
@@ -23,8 +23,8 @@
 
         <com.google.android.exoplayer2.ui.PlayerView
             android:id="@+id/step_video_player"
-            android:layout_height="match_parent"
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
 
             />
         </FrameLayout>
@@ -33,11 +33,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
+            android:gravity="center"
             android:paddingStart="@dimen/card_title_text_padding_left"
-            android:paddingEnd="@dimen/card_title_text_padding_left"
             android:paddingTop="@dimen/card_title_text_padding_left"
 
-            android:gravity="center"
+            android:paddingEnd="@dimen/card_title_text_padding_left"
             android:textColor="@color/colorCardText"
             android:textSize="@dimen/card_text_title_size" />
         <TextView
@@ -46,11 +46,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
+            android:gravity="center"
             android:paddingStart="@dimen/card_title_text_padding_left"
-            android:paddingEnd="@dimen/card_title_text_padding_left"
             android:paddingTop="@dimen/card_title_text_padding_left"
 
-            android:gravity="center"
+            android:paddingEnd="@dimen/card_title_text_padding_left"
             android:textColor="@color/colorCardText"
             android:textSize="@dimen/card_text_title_size" />
 

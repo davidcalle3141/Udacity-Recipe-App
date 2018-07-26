@@ -12,13 +12,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import calle.david.udacityrecipeapp.Data.Database.Steps;
 import calle.david.udacityrecipeapp.R;
 import calle.david.udacityrecipeapp.UI.Adapters.RecipeCardAdapter;
 import calle.david.udacityrecipeapp.Utilities.InjectorUtils;
@@ -28,16 +33,15 @@ import calle.david.udacityrecipeapp.ViewModel.RecipeAppViewModel;
 public class RecipeCardsViewFragment extends Fragment implements RecipeCardAdapter.RecipeCardAdapterOnClickListener {
     private RecipeAppViewModel mViewModel;
     private Context mContext;
+    private  boolean isTwoPane=false;
 
 
-    RecipeCardAdapter recipeCardAdapter;
-
+    private RecipeCardAdapter recipeCardAdapter;
     @BindView(R.id.recipeCardsRV)RecyclerView recyclerView;
     private View view;
 
     public RecipeCardsViewFragment(){
-
-    }
+        }
 
 
     @Nullable
@@ -46,24 +50,29 @@ public class RecipeCardsViewFragment extends Fragment implements RecipeCardAdapt
         this.view = inflater.inflate(R.layout.fragment_recipe_cards_fragment,container,false);
         mContext = this.getContext();
         ButterKnife.bind(this,view);
-        GridLayoutManager mGrid = new GridLayoutManager(mContext,1);
-        recyclerView.setLayoutManager(mGrid);
-        recipeCardAdapter = new RecipeCardAdapter(mContext, this);
-        recyclerView.setAdapter(recipeCardAdapter);
-
-
-
-
-
         return view;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if(Objects.requireNonNull(getActivity()).findViewById(R.id.twoPane)!=null){
+            isTwoPane = true;
+            Navigation.setViewNavController(view,Navigation.findNavController(view));
+        }else {
 
+        }
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        RecipeAppViewModelFactory factory = InjectorUtils.provideRecipeCardViewFactory(getActivity());
+        int spanCount = isTwoPane ? 3 : 1;
+        GridLayoutManager mGrid = new GridLayoutManager(mContext, spanCount);
+        recyclerView.setLayoutManager(mGrid);
+        recipeCardAdapter = new RecipeCardAdapter(mContext, this);
+        recyclerView.setAdapter(recipeCardAdapter);
+        RecipeAppViewModelFactory factory = InjectorUtils.provideRecipeCardViewFactory(Objects.requireNonNull(getActivity()));
         mViewModel = ViewModelProviders.of(getActivity(),factory).get(RecipeAppViewModel.class);
         populateUI();
 
@@ -92,8 +101,8 @@ public class RecipeCardsViewFragment extends Fragment implements RecipeCardAdapt
         mViewModel.getRecipeList().observe(this, recipes -> {
             if(recipes!=null)
             mViewModel.setSelectedRecipe(recipes.get(position));
-            Navigation.findNavController(view).navigate(R.id.action_recipeCardsViewFragment_to_recipeIngredientsFragment);
-
+            if(isTwoPane)Navigation.findNavController(view).navigate(R.id.action_recipeCardsViewFragment_to_master_list_fragment);
+            else Navigation.findNavController(view).navigate(R.id.action_recipeCardsViewFragment_to_recipeIngredientsFragment);
         });
 
     }
