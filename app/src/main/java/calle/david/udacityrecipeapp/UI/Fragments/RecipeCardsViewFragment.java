@@ -12,12 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
 import java.util.Objects;
 
 import androidx.navigation.NavController;
@@ -47,7 +42,7 @@ public class RecipeCardsViewFragment extends Fragment implements RecipeCardAdapt
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        this.view = inflater.inflate(R.layout.fragment_recipe_cards_fragment,container,false);
+        this.view = inflater.inflate(R.layout.fragment_recipe_cards,container,false);
         mContext = this.getContext();
         ButterKnife.bind(this,view);
         return view;
@@ -57,11 +52,8 @@ public class RecipeCardsViewFragment extends Fragment implements RecipeCardAdapt
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if(Objects.requireNonNull(getActivity()).findViewById(R.id.twoPane)!=null){
-            isTwoPane = true;
-            Navigation.setViewNavController(view,Navigation.findNavController(view));
-        }else {
+            isTwoPane = true; }
 
-        }
     }
 
     @Override
@@ -74,6 +66,7 @@ public class RecipeCardsViewFragment extends Fragment implements RecipeCardAdapt
         recyclerView.setAdapter(recipeCardAdapter);
         RecipeAppViewModelFactory factory = InjectorUtils.provideRecipeCardViewFactory(Objects.requireNonNull(getActivity()));
         mViewModel = ViewModelProviders.of(getActivity(),factory).get(RecipeAppViewModel.class);
+
         populateUI();
 
     }
@@ -97,12 +90,11 @@ public class RecipeCardsViewFragment extends Fragment implements RecipeCardAdapt
 
     @Override
     public void onItemClick(int position) {
-
         mViewModel.getRecipeList().observe(this, recipes -> {
             if(recipes!=null)
             mViewModel.setSelectedRecipe(recipes.get(position));
             if(isTwoPane)Navigation.findNavController(view).navigate(R.id.action_recipeCardsViewFragment_to_master_list_fragment);
-            else Navigation.findNavController(view).navigate(R.id.action_recipeCardsViewFragment_to_recipeIngredientsFragment);
+            else Navigation.findNavController(view).navigate(R.id.recipeIngredientsDestination);
         });
 
     }

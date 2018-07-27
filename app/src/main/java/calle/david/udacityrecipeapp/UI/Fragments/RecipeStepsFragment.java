@@ -3,17 +3,16 @@ package calle.david.udacityrecipeapp.UI.Fragments;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -26,16 +25,12 @@ import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,7 +40,6 @@ import calle.david.udacityrecipeapp.R;
 import calle.david.udacityrecipeapp.Utilities.InjectorUtils;
 import calle.david.udacityrecipeapp.ViewModel.RecipeAppViewModel;
 import calle.david.udacityrecipeapp.ViewModel.RecipeAppViewModelFactory;
-import okhttp3.internal.Util;
 
 
 public class RecipeStepsFragment extends Fragment {
@@ -62,6 +56,8 @@ public class RecipeStepsFragment extends Fragment {
     @BindView(R.id.next_button)Button nextButton;
     @BindView(R.id.previous_button)Button prevButton;
     private boolean isTwoPane=false;
+    private NavController navigationController;
+    private boolean newToStack;
 
     public RecipeStepsFragment(){
 
@@ -82,19 +78,24 @@ public class RecipeStepsFragment extends Fragment {
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+
         super.onActivityCreated(savedInstanceState);
         RecipeAppViewModelFactory factory = InjectorUtils.provideRecipeCardViewFactory(Objects.requireNonNull(getActivity()));
-
         mViewModel = ViewModelProviders.of(getActivity(),factory).get(RecipeAppViewModel.class);
         mViewModel.getFocusedStep().removeObservers(this);
+        if(isLandscape()&&newToStack){
+            newToStack=false;
+            sendToFullscreenVideo();}
 
+        else if(!newToStack && isLandscape())Navigation.findNavController(mView).navigateUp();
+        else
         mViewModel.getFocusedStep().observe(this, focusedStep->{
             cleanUpPlayer();
             mFrameLayout.setVisibility(View.GONE);
             if (focusedStep != null)
                 populateUI(focusedStep);
-
         });
+
 
 
 
@@ -139,7 +140,7 @@ public class RecipeStepsFragment extends Fragment {
             mViewModel.setVideoPosition(mExoPlayer.getCurrentPosition());
             cleanUpPlayer();
         }
-        Navigation.findNavController(mView).navigate(R.id.action_recipeStepsFragment_to_video_player);
+        Navigation.findNavController(mView).navigate(R.id.videoPlayerDestination);
 
 
 
@@ -162,8 +163,6 @@ public class RecipeStepsFragment extends Fragment {
 
             mViewModel.setStepNum(newPosition);
             mViewModel.getFocusedStep().postValue(stepsList.get(newPosition));
-            if(stepsList.get(newPosition).getVideoURL().equals(""))mViewModel.setHasVideo(false);
-            else mViewModel.setHasVideo(true);
             if(mViewModel.isHasVideo() && isLandscape() && !isTwoPane) sendToFullscreenVideo();
             }
 
@@ -225,7 +224,11 @@ public class RecipeStepsFragment extends Fragment {
 
     }
 
-
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.newToStack = true;
+    }
 
     private void cleanUpPlayer(){
         if(mExoPlayer!=null){

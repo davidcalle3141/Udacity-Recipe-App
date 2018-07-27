@@ -19,7 +19,7 @@
         android:orientation="vertical">
 
 
-        <include layout="@layout/fragment_recipe_ingredients_card" />
+        <include layout="@layout/ingredients_card" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/ingredientsListStepsRV"

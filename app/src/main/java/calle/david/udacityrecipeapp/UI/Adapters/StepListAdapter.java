@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import calle.david.udacityrecipeapp.Data.Database.Ingredients;
 import calle.david.udacityrecipeapp.Data.Database.Steps;
 import calle.david.udacityrecipeapp.R;
 
@@ -32,7 +31,7 @@ public class StepListAdapter extends RecyclerView.Adapter<StepListViewHolder> {
     @NonNull
     @Override
     public StepListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_recipe_ingredients_step_list,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.short_description_step_list,parent,false);
         return new StepListViewHolder(view, onClickListener );
     }
 

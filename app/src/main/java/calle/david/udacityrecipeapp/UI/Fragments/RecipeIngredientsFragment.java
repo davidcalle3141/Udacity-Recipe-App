@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import com.squareup.picasso.Picasso;
 import java.util.Objects;
 
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,7 +43,6 @@ public class RecipeIngredientsFragment extends Fragment implements StepListAdapt
     private int[] position= new int[2];
     IngredientListAdapter ingredientListAdapter;
     StepListAdapter stepListAdapter;
-    NavController navigationController;
 
     @BindView(R.id.ingredients_master_list_fragment)NestedScrollView scrollView;
     @BindView(R.id.ingredientsListRV)RecyclerView recyclerViewIngredientsList;
@@ -60,7 +61,7 @@ public class RecipeIngredientsFragment extends Fragment implements StepListAdapt
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        this.view = inflater.inflate(R.layout.fragment_recipe_ingredients_fragment,container,false);
+        this.view = inflater.inflate(R.layout.fragment_recipe_ingredients,container,false);
         Context mContext = getContext();
         ButterKnife.bind(this,view);
         LinearLayoutManager layoutManagerIng = new LinearLayoutManager(mContext);
@@ -83,10 +84,9 @@ public class RecipeIngredientsFragment extends Fragment implements StepListAdapt
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if(Objects.requireNonNull(getActivity()).findViewById(R.id.twoPane)!=null){
-            isTwoPane = true;
-        }else  navigationController = Navigation.findNavController(view);
+            isTwoPane = true; }
 
-
+        int b = 9;
     }
 
     @Override
@@ -94,10 +94,10 @@ public class RecipeIngredientsFragment extends Fragment implements StepListAdapt
         super.onActivityCreated(savedInstanceState);
         RecipeAppViewModelFactory factory = InjectorUtils.provideRecipeCardViewFactory(Objects.requireNonNull(getActivity()));
         mViewModel = ViewModelProviders.of(getActivity(),factory).get(RecipeAppViewModel.class);
-
         mViewModel.getSelectedRecipe().observe(this, this::populateUI);
 
-        }
+
+    }
 
     @Override
     public void onResume() {
@@ -125,26 +125,18 @@ public class RecipeIngredientsFragment extends Fragment implements StepListAdapt
 
     }
     @Override
-    synchronized public void onClick(int position) {
-        //when i pressed the backbutton from the recipes steps fragment after navigating to the video player fragment directly
-        //my backstack would be incorrect and id get an error this following if statement makes sure the navcontroller is at
-        //"this" fragment
-        if(!isTwoPane && navigationController.getCurrentDestination().getId() != R.id.recipeIngredientsFragment){
-        navigationController.popBackStack(R.id.recipeIngredientsFragment,false);}
+     public void onClick(int position) {
         mViewModel.getFocusedStep().removeObservers(this);
         mViewModel.getFetchedSteps().removeObservers(this);
+
         mViewModel.getFetchedSteps().observe(this, stepsList -> {
             if(stepsList!= null){
                 mViewModel.getFocusedStep().setValue(stepsList.get(position));
                 mViewModel.setStepNum(position);
-            }try {
+                mViewModel.setHasVideo(!stepsList.get(position).getVideoURL().equals(""));
                 if(!isTwoPane) {
-                    if(isLandscape() && !stepsList.get(position).getVideoURL().equals(""))navigationController.navigate(R.id.action_recipeIngredientsFragment_to_video_player);
-                    navigationController.navigate(R.id.action_recipeIngredientsFragment_to_recipeStepsFragment);
+                    Navigation.findNavController(view).navigate(R.id.recipeStepsDestination);
                 }
-            }catch (Exception e){
-                e.printStackTrace();
-
             }
         });
 

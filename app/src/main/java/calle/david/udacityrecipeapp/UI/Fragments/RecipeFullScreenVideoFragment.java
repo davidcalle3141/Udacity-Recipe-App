@@ -32,6 +32,8 @@ import java.util.Objects;
 
 import androidx.navigation.NavAction;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
+import androidx.navigation.NavGraph;
 import androidx.navigation.Navigation;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,8 +61,10 @@ public class RecipeFullScreenVideoFragment extends Fragment {
         mViewModel = ViewModelProviders.of(getActivity(),factory).get(RecipeAppViewModel.class);
 
         mViewModel.getFocusedStep().removeObservers(this);
-
-        mViewModel.getFocusedStep().observe(this, this::populateUI);
+        mViewModel.getFocusedStep().observe(this, focusedStep ->
+        {
+            populateUI(focusedStep);
+        });
 
 
     }
@@ -80,9 +84,11 @@ public class RecipeFullScreenVideoFragment extends Fragment {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        mViewModel.setVideoPosition(mExoPlayer.getCurrentPosition());
+        if(mExoPlayer!=null)
+            mViewModel.setVideoPosition(mExoPlayer.getCurrentPosition());
         cleanUpPlayer();
-        Navigation.findNavController(mView).navigate(R.id.action_video_player_to_recipeStepsFragment);
+        Navigation.findNavController(mView).popBackStack();
+
     }
     @Override
     public void onResume() {
@@ -98,17 +104,9 @@ public class RecipeFullScreenVideoFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if(isLandscape())Navigation.findNavController(mView).navigate(R.id.action_video_player_to_recipeIngredientsFragment);
-
-    }
-
-    @Override
-    public void onDestroy() {
         showSystemUI();
-        super.onDestroy();
-        if(mExoPlayer!=null)cleanUpPlayer();
-
     }
+
 
     private Boolean isLandscape(){
         return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;

@@ -34,7 +34,7 @@ public class MasterListFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View mView = inflater.inflate(R.layout.fragment_master_list_fragment, container, false);
+        View mView = inflater.inflate(R.layout.fragment_master_list, container, false);
         this.mContext = getContext();
         ButterKnife.bind(this, mView);
         return mView;

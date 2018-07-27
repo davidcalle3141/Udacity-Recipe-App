@@ -3,70 +3,48 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/recipeCardsViewFragment">
+    app:startDestination="@id/recipeCardDestination">
 
     <fragment
-        android:id="@+id/recipeCardsViewFragment"
+        android:id="@+id/recipeCardDestination"
         android:name="calle.david.udacityrecipeapp.UI.Fragments.RecipeCardsViewFragment"
-        android:label="fragment_recipe_cards_fragment"
-        tools:layout="@layout/fragment_recipe_cards_fragment">
+        android:label="fragment_recipe_card"
+        tools:layout="">
         <action
-            android:id="@+id/action_recipeCardsViewFragment_to_recipeIngredientsFragment"
-            app:destination="@id/recipeIngredientsFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            android:id="@+id/action_recipeCardDestination_to_recipeIngredientsFragment"
+            app:destination="@id/recipeIngredientsDestination"
+            app:launchSingleTop="true"
+            app:popUpTo="@+id/recipeCardDestination"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
-        android:id="@+id/recipeIngredientsFragment"
+        android:id="@+id/recipeIngredientsDestination"
         android:name="calle.david.udacityrecipeapp.UI.Fragments.RecipeIngredientsFragment"
         android:label="fragment_recipe_ingredients"
-        tools:layout="@layout/fragment_recipe_ingredients_fragment" >
+        tools:layout="@layout/fragment_recipe_ingredients" >
         <action
-            android:id="@+id/action_recipeIngredientsFragment_to_recipeStepsFragment"
-            app:destination="@+id/recipeStepsFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"
-            />
-        <action
-            android:id="@+id/action_recipeIngredientsFragment_to_video_player"
-            app:destination="@id/video_player"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            android:id="@+id/action_recipeIngredientsDestination_to_recipeStepsFragment"
+            app:destination="@id/recipeStepsDestination"
+            app:launchSingleTop="true"
+            app:popUpTo="@+id/recipeStepsDestination"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
-        android:id="@+id/recipeStepsFragment"
+        android:id="@+id/recipeStepsDestination"
         android:name="calle.david.udacityrecipeapp.UI.Fragments.RecipeStepsFragment"
         android:label="fragment_recipe_steps"
         tools:layout="@layout/fragment_recipe_steps_fragment" >
         <action
-            android:id="@+id/action_recipeStepsFragment_to_video_player"
-            app:destination="@id/video_player" />
-        <action
-            android:id="@+id/action_recipeStepsFragment_to_recipeIngredientsFragment2"
-            app:destination="@+id/recipeIngredientsFragment"
-            app:launchSingleTop="false"
-            app:popUpTo="@+id/recipeIngredientsFragment"
+            android:id="@+id/action_recipeStepsDestination_to_videoPlayerDestination"
+            app:destination="@id/videoPlayerDestination"
+            app:launchSingleTop="true"
+            app:popUpTo="@+id/videoPlayerDestination"
             app:popUpToInclusive="false" />
     </fragment>
     <fragment
-        android:id="@+id/video_player"
+        android:id="@+id/videoPlayerDestination"
         android:name="calle.david.udacityrecipeapp.UI.Fragments.RecipeFullScreenVideoFragment"
         android:label="fragment_video_player"
-        tools:layout="@layout/fragment_video_player">
-        <action
-            android:id="@+id/action_video_player_to_recipeIngredientsFragment"
-            app:destination="@+id/recipeIngredientsFragment"
-            app:popUpTo="@+id/recipeIngredientsFragment" />
-        <action
-            android:id="@+id/action_video_player_to_recipeStepsFragment"
-            app:destination="@id/recipeStepsFragment"
-            app:popUpTo="@+id/recipeIngredientsFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_video_player"></fragment>
 
 </navigation>
