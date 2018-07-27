@@ -113,6 +113,7 @@ public class RecipeStepsFragment extends Fragment {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
             if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE && mViewModel.isHasVideo() && !isTwoPane ){
+                newToStack=false;
                 sendToFullscreenVideo();
             }
             if(isTwoPane && mExoPlayer!=null){
