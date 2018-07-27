@@ -61,10 +61,7 @@ public class RecipeFullScreenVideoFragment extends Fragment {
         mViewModel = ViewModelProviders.of(getActivity(),factory).get(RecipeAppViewModel.class);
 
         mViewModel.getFocusedStep().removeObservers(this);
-        mViewModel.getFocusedStep().observe(this, focusedStep ->
-        {
-            populateUI(focusedStep);
-        });
+        mViewModel.getFocusedStep().observe(this, this::populateUI);
 
 
     }

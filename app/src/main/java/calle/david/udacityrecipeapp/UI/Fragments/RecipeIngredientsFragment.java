@@ -83,11 +83,10 @@ public class RecipeIngredientsFragment extends Fragment implements StepListAdapt
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        //checks if tablet, in future will get this through bundle
         if(Objects.requireNonNull(getActivity()).findViewById(R.id.twoPane)!=null){
             isTwoPane = true; }
-
-        int b = 9;
-    }
+            }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -102,7 +101,7 @@ public class RecipeIngredientsFragment extends Fragment implements StepListAdapt
     @Override
     public void onResume() {
         super.onResume();
-        ScrollToPosition(position);
+        //ScrollToPosition(position);
     }
 
     @Override

@@ -51,6 +51,8 @@ public class RecipeCardsViewFragment extends Fragment implements RecipeCardAdapt
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        //since this is the start destination this code checks is we are using a tablet or not
+        //in the future i will pass this as an argument to other fragments instead of checking at every fragment
         if(Objects.requireNonNull(getActivity()).findViewById(R.id.twoPane)!=null){
             isTwoPane = true; }
 

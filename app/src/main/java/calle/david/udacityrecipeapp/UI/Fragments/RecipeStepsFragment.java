@@ -74,7 +74,16 @@ public class RecipeStepsFragment extends Fragment {
 
     }
 
-
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        //checks if tablet or not
+        if(Objects.requireNonNull(getActivity()).findViewById(R.id.twoPane)!=null){
+            isTwoPane = true;
+//            nextButton.setVisibility(View.GONE);
+//            prevButton.setVisibility(View.GONE);
+        }
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -83,32 +92,38 @@ public class RecipeStepsFragment extends Fragment {
         RecipeAppViewModelFactory factory = InjectorUtils.provideRecipeCardViewFactory(Objects.requireNonNull(getActivity()));
         mViewModel = ViewModelProviders.of(getActivity(),factory).get(RecipeAppViewModel.class);
         mViewModel.getFocusedStep().removeObservers(this);
-        if(isLandscape()&&newToStack){
+        /*
+        if ingredients fragment navigates to this fragment in landscape automatically navigate to full screen
+        if i navigate directly to fullscreen fragment from ingredients fragment my navigation backstack becomes a mess
+        and this fragment is skipped and cant pop back on orientation change
+         */
+        if(isLandscape()&&newToStack&&!isTwoPane){
             newToStack=false;
             sendToFullscreenVideo();}
+        /*
+        pressing the back button from the video fragment brings you back here and this code pops back to
+        the ingredients fragment by checking whether or not this fragment was already in the backstack or previously created
+        */
+        else if(!newToStack && isLandscape()&&!isTwoPane){
+            Navigation.findNavController(mView).navigateUp();}
 
-        else if(!newToStack && isLandscape())Navigation.findNavController(mView).navigateUp();
-        else
-        mViewModel.getFocusedStep().observe(this, focusedStep->{
-            cleanUpPlayer();
-            mFrameLayout.setVisibility(View.GONE);
-            if (focusedStep != null)
-                populateUI(focusedStep);
-        });
+        /*
+        finally this populates the UI if in landscape
+        */
+        else{
+
+            mViewModel.getFocusedStep().observe(this, focusedStep->{
+                cleanUpPlayer();
+                mFrameLayout.setVisibility(View.GONE);
+                if (focusedStep != null)
+                    populateUI(focusedStep);
+        });}
 
 
 
 
     }
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        if(Objects.requireNonNull(getActivity()).findViewById(R.id.twoPane)!=null){
-            isTwoPane = true;
-//            nextButton.setVisibility(View.GONE);
-//            prevButton.setVisibility(View.GONE);
-        }
-    }
+
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -118,6 +133,7 @@ public class RecipeStepsFragment extends Fragment {
             }
             if(isTwoPane && mExoPlayer!=null){
                 mViewModel.setVideoPosition(mExoPlayer.getCurrentPosition());
+                //calls onActivityCreated so width and height of video can be recalculated on screen rotation in tablet
                 onActivityCreated(null);
             }
 
@@ -125,7 +141,6 @@ public class RecipeStepsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
         if(mExoPlayer!=null) mExoPlayer.setPlayWhenReady(true);
     }
 
@@ -175,6 +190,7 @@ public class RecipeStepsFragment extends Fragment {
             int newPosition;
             mViewModel.setVideoPosition(0);
             if (stepsList != null) {
+                //wrap around going backwards
                 int a= mViewModel.getStepNum()-1;
                 int b = stepsList.size();
                 newPosition = a < 0 ? b + a : a % b;
