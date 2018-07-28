@@ -35,6 +35,8 @@ public class RecipeAppViewModel extends ViewModel {
         this.mRecipeList = mRepo.getRecipeList();
         this.mSelectedRecipe = new MutableLiveData<>();
         this.mFocusedStep = new MutableLiveData<>();
+        this.mIngredientsList = null;
+        this.mSteplist = null;
     }
 
     public LiveData<List<Recipe>> getRecipeList() {
@@ -43,7 +45,7 @@ public class RecipeAppViewModel extends ViewModel {
 
 
     public LiveData<List<Ingredients>> getIngredientsforRecipe(int recipeID){
-       //if(mIngredientsList == null) mIngredientsList = mRepo.getIngredientsList(recipeID);
+       if(mIngredientsList == null) mIngredientsList = mRepo.getIngredientsList(recipeID);
        return mIngredientsList;
     }
     public LiveData<List<Steps>> getStepsforRecipe(){
@@ -59,6 +61,8 @@ public class RecipeAppViewModel extends ViewModel {
         mIngredientsList = mRepo.getIngredientsList(recipe.getId());
         mSteplist = mRepo.getStepsList(recipe.getId());
         mSelectedRecipe.setValue(recipe);
+        mRepo.setRecentRecipe(recipe.getId());
+
     }
     public MutableLiveData<Recipe> getSelectedRecipe(){
         return mSelectedRecipe;
