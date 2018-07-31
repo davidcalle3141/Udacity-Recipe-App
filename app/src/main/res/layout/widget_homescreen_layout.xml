@@ -1,0 +1,28 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_homescreen_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    >
+    <TextView
+        android:id="@+id/widget_ingredients_list_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/card_title_text_padding_left"
+        android:paddingEnd="@dimen/card_title_text_padding_left"
+        android:paddingTop="@dimen/card_title_text_padding_left"
+        android:gravity="center"
+        android:textColor="@color/colorCardText"
+        android:textSize="@dimen/card_text_title_size"
+        />
+    <ListView
+        android:id="@+id/widget_ingredients_list_items"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:dividerHeight="1dp"/>
+
+
+
+</LinearLayout>

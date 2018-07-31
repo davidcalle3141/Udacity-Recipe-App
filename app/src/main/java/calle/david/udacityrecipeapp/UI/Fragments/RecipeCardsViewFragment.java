@@ -1,7 +1,10 @@
 package calle.david.udacityrecipeapp.UI.Fragments;
 
+import android.appwidget.AppWidgetProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,6 +15,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.appwidget.AppWidgetManager;
+
 
 import java.util.Objects;
 
@@ -19,8 +24,11 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import calle.david.udacityrecipeapp.Data.Database.Recipe;
 import calle.david.udacityrecipeapp.R;
 import calle.david.udacityrecipeapp.UI.Adapters.RecipeCardAdapter;
+import calle.david.udacityrecipeapp.UI.Widget.HomeScreenWidget;
+import calle.david.udacityrecipeapp.UI.Widget.WidgetUtils;
 import calle.david.udacityrecipeapp.Utilities.InjectorUtils;
 import calle.david.udacityrecipeapp.ViewModel.RecipeAppViewModelFactory;
 import calle.david.udacityrecipeapp.ViewModel.RecipeAppViewModel;
@@ -93,11 +101,26 @@ public class RecipeCardsViewFragment extends Fragment implements RecipeCardAdapt
     @Override
     public void onItemClick(int position) {
         mViewModel.getRecipeList().observe(this, recipes -> {
-            if(recipes!=null)
-            mViewModel.setSelectedRecipe(recipes.get(position));
-            if(isTwoPane)Navigation.findNavController(view).navigate(R.id.action_recipeCardsViewFragment_to_master_list_fragment);
-            else Navigation.findNavController(view).navigate(R.id.recipeIngredientsDestination);
+
+            if(recipes!=null) {
+                mViewModel.setSelectedRecipe(recipes.get(position));
+                updateWidget(recipes.get(position));
+                if(isTwoPane)Navigation.findNavController(view).navigate(R.id.action_recipeCardsViewFragment_to_master_list_fragment);
+                else Navigation.findNavController(view).navigate(R.id.recipeIngredientsDestination);
+            }
+
         });
+
+    }
+
+    private void updateWidget(Recipe recipe) {
+        WidgetUtils.setWidgetAttributes(mContext,recipe.getId(),recipe.getName());
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(mContext);
+        int[] widgetIDs = appWidgetManager.getAppWidgetIds(
+                new ComponentName(mContext,HomeScreenWidget.class)
+        );
+        appWidgetManager.notifyAppWidgetViewDataChanged(widgetIDs,R.id.widget_ingredients_list_items);
+        HomeScreenWidget.updateAppWidget(mContext,appWidgetManager,widgetIDs);
 
     }
 }

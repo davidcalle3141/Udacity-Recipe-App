@@ -1,7 +1,9 @@
 package calle.david.udacityrecipeapp.UI.Fragments;
 
+import android.appwidget.AppWidgetManager;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -21,6 +23,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
 import java.util.Objects;
 
 import androidx.navigation.NavController;
@@ -28,6 +31,7 @@ import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import calle.david.udacityrecipeapp.Data.Database.Ingredients;
 import calle.david.udacityrecipeapp.Data.Database.Recipe;
 import calle.david.udacityrecipeapp.R;
 import calle.david.udacityrecipeapp.UI.Adapters.IngredientListAdapter;
@@ -172,7 +176,6 @@ public class RecipeIngredientsFragment extends Fragment implements StepListAdapt
             if (ingredients != null) {
                 ingredientListAdapter.addIngredientsList(ingredients);
                 ingredientListAdapter.notifyDataSetChanged();
-
             }
 
         });
@@ -189,6 +192,8 @@ public class RecipeIngredientsFragment extends Fragment implements StepListAdapt
         });
 
     }
+
+
     private Boolean isLandscape(){
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
             return true;

@@ -19,7 +19,12 @@ public interface IngredientsDao {
 
     @Query("SELECT * FROM Ingredients ORDER BY ingredientID")
     LiveData<List<Ingredients>> loadAllIngredients();
+    //non live data query, gets current snapshot
+    @Query("SELECT * FROM Ingredients WHERE recipeID = :recipeID ORDER BY ingredientID")
+    List<Ingredients>loadIngredientsSnapshot(int recipeID);
 
     @Query("DELETE FROM Ingredients")
     void deleteIngredients();
+
+
 }

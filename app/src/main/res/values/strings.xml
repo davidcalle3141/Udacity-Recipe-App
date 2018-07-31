@@ -13,4 +13,7 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
     <string name="ingredients_list">Ingredients List</string>
+    <string name="preference_id_key">preference_id_key</string>
+    <string name="preference_title_key">preference_title_key</string>
+    <string name="widget_default_text">Tap and select Recipe</string>
 </resources>
