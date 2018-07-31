@@ -15,7 +15,7 @@ public class InjectorUtils {
         AppExecutors executors = AppExecutors.getInstance();
         RecipeNetworkDataSource networkDataSource =
                 RecipeNetworkDataSource.getsInstance(context.getApplicationContext(), executors);
-        return RecipeAppRepo.getsInstance(database.recipesDao(),database.ingredientsDao(),database.stepsDao(),database.recentVisitsDao(),networkDataSource,executors);
+        return RecipeAppRepo.getsInstance(database.recipesDao(),database.ingredientsDao(),database.stepsDao(),networkDataSource,executors);
     }
 
     public static RecipeNetworkDataSource provideNetworkDataSource(Context context){

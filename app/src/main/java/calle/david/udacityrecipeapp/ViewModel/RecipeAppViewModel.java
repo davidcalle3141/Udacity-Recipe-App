@@ -61,7 +61,6 @@ public class RecipeAppViewModel extends ViewModel {
         mIngredientsList = mRepo.getIngredientsList(recipe.getId());
         mSteplist = mRepo.getStepsList(recipe.getId());
         mSelectedRecipe.setValue(recipe);
-        mRepo.setRecentRecipe(recipe.getId());
 
     }
     public MutableLiveData<Recipe> getSelectedRecipe(){
