@@ -37,6 +37,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import calle.david.udacityrecipeapp.Data.Database.Steps;
 import calle.david.udacityrecipeapp.R;
+import calle.david.udacityrecipeapp.Utilities.EspressoIdlingResource;
 import calle.david.udacityrecipeapp.Utilities.InjectorUtils;
 import calle.david.udacityrecipeapp.ViewModel.RecipeAppViewModel;
 import calle.david.udacityrecipeapp.ViewModel.RecipeAppViewModelFactory;
@@ -117,8 +118,9 @@ public class RecipeStepsFragment extends Fragment {
                 mFrameLayout.setVisibility(View.GONE);
                 if (focusedStep != null)
                     populateUI(focusedStep);
-        });}
+                EspressoIdlingResource.decrement();
 
+            }); }
 
 
 

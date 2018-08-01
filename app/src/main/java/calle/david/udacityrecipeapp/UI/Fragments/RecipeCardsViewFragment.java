@@ -29,6 +29,7 @@ import calle.david.udacityrecipeapp.R;
 import calle.david.udacityrecipeapp.UI.Adapters.RecipeCardAdapter;
 import calle.david.udacityrecipeapp.UI.Widget.HomeScreenWidget;
 import calle.david.udacityrecipeapp.UI.Widget.WidgetUtils;
+import calle.david.udacityrecipeapp.Utilities.EspressoIdlingResource;
 import calle.david.udacityrecipeapp.Utilities.InjectorUtils;
 import calle.david.udacityrecipeapp.ViewModel.RecipeAppViewModelFactory;
 import calle.david.udacityrecipeapp.ViewModel.RecipeAppViewModel;
@@ -84,14 +85,16 @@ public class RecipeCardsViewFragment extends Fragment implements RecipeCardAdapt
 
     private void populateUI() {
         mViewModel.getRecipeList().removeObservers(this);
-
         mViewModel.getRecipeList().observe(this,
                 recipes->{
             if(recipes != null){
                 if(recipes.size()!=0){
                 recipeCardAdapter.addRecipeList(recipes);
                 recipeCardAdapter.notifyDataSetChanged();
-                recyclerView.setVisibility(View.VISIBLE);}
+                recyclerView.setVisibility(View.VISIBLE);
+                EspressoIdlingResource.decrement();
+
+                }
 
             }
                 });
@@ -100,8 +103,9 @@ public class RecipeCardsViewFragment extends Fragment implements RecipeCardAdapt
 
     @Override
     public void onItemClick(int position) {
-        mViewModel.getRecipeList().observe(this, recipes -> {
+        EspressoIdlingResource.increment();//stop test till we navigate to next view
 
+        mViewModel.getRecipeList().observe(this, recipes -> {
             if(recipes!=null) {
                 mViewModel.setSelectedRecipe(recipes.get(position));
                 updateWidget(recipes.get(position));

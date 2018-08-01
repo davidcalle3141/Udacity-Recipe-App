@@ -36,6 +36,7 @@ import calle.david.udacityrecipeapp.Data.Database.Recipe;
 import calle.david.udacityrecipeapp.R;
 import calle.david.udacityrecipeapp.UI.Adapters.IngredientListAdapter;
 import calle.david.udacityrecipeapp.UI.Adapters.StepListAdapter;
+import calle.david.udacityrecipeapp.Utilities.EspressoIdlingResource;
 import calle.david.udacityrecipeapp.Utilities.InjectorUtils;
 import calle.david.udacityrecipeapp.ViewModel.RecipeAppViewModel;
 import calle.david.udacityrecipeapp.ViewModel.RecipeAppViewModelFactory;
@@ -97,7 +98,13 @@ public class RecipeIngredientsFragment extends Fragment implements StepListAdapt
         super.onActivityCreated(savedInstanceState);
         RecipeAppViewModelFactory factory = InjectorUtils.provideRecipeCardViewFactory(Objects.requireNonNull(getActivity()));
         mViewModel = ViewModelProviders.of(getActivity(),factory).get(RecipeAppViewModel.class);
-        mViewModel.getSelectedRecipe().observe(this, this::populateUI);
+        mViewModel.getSelectedRecipe().observe(this, recipe -> {
+            if (recipe != null) {
+                populateUI(recipe);
+                EspressoIdlingResource.decrement();
+
+            }
+        });
 
 
     }
@@ -129,6 +136,8 @@ public class RecipeIngredientsFragment extends Fragment implements StepListAdapt
     }
     @Override
      public void onClick(int position) {
+        EspressoIdlingResource.increment();//stop test till we navigate to next view
+
         mViewModel.getFocusedStep().removeObservers(this);
         mViewModel.getFetchedSteps().removeObservers(this);
 
@@ -182,7 +191,7 @@ public class RecipeIngredientsFragment extends Fragment implements StepListAdapt
 
 
         mViewModel.getStepsforRecipe().observe(this, stepsList -> {
-            if (stepsList != null) {
+            if (stepsList != null && stepsList.size()>0) {
                 mViewModel.setStepListSize(stepsList.size());
                 stepListAdapter.addStepList(stepsList);
                 stepListAdapter.notifyDataSetChanged();

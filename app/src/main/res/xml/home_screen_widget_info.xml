@@ -4,7 +4,6 @@
     android:initialLayout="@layout/widget_homescreen_layout"
     android:minWidth="180dp"
     android:minHeight="110dp"
-    android:previewImage="@drawable/example_appwidget_preview"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen"
     />

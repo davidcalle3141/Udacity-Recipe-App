@@ -11,6 +11,12 @@
                   <entry key="recipeCardDestination">
                     <value>
                       <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="12" />
+                            <option name="y" value="12" />
+                          </Point>
+                        </option>
                         <option name="myPositions">
                           <map>
                             <entry key="action_recipeCardDestination_to_recipeIngredientsFragment">
@@ -26,6 +32,12 @@
                   <entry key="recipeIngredientsDestination">
                     <value>
                       <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="265" />
+                            <option name="y" value="12" />
+                          </Point>
+                        </option>
                         <option name="myPositions">
                           <map>
                             <entry key="action_recipeIngredientsDestination_to_recipeStepsFragment">
@@ -41,6 +53,12 @@
                   <entry key="recipeStepsDestination">
                     <value>
                       <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="518" />
+                            <option name="y" value="12" />
+                          </Point>
+                        </option>
                         <option name="myPositions">
                           <map>
                             <entry key="action_recipeStepsDestination_to_videoPlayerDestination">
@@ -55,7 +73,14 @@
                   </entry>
                   <entry key="videoPlayerDestination">
                     <value>
-                      <LayoutPositions />
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="771" />
+                            <option name="y" value="12" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
                     </value>
                   </entry>
                 </map>

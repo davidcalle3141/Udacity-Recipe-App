@@ -39,6 +39,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import calle.david.udacityrecipeapp.Data.Database.Steps;
 import calle.david.udacityrecipeapp.R;
+import calle.david.udacityrecipeapp.Utilities.EspressoIdlingResource;
 import calle.david.udacityrecipeapp.Utilities.InjectorUtils;
 import calle.david.udacityrecipeapp.ViewModel.RecipeAppViewModel;
 import calle.david.udacityrecipeapp.ViewModel.RecipeAppViewModelFactory;
@@ -61,7 +62,11 @@ public class RecipeFullScreenVideoFragment extends Fragment {
         mViewModel = ViewModelProviders.of(getActivity(),factory).get(RecipeAppViewModel.class);
 
         mViewModel.getFocusedStep().removeObservers(this);
-        mViewModel.getFocusedStep().observe(this, this::populateUI);
+        mViewModel.getFocusedStep().observe(this, focusedStep -> {
+            populateUI(focusedStep);
+            EspressoIdlingResource.decrement();
+
+        });
 
 
     }
