@@ -2,10 +2,10 @@
 Project Overview
 You will productionize an app, taking it from a functional state to a production-ready state. This will involve finding and handling error cases, adding accessibility features, allowing for localization, adding a widget, and adding a library.
 
-Why this Project?
+#Why this Project?
 As a working Android developer, you often have to create and implement apps where you are responsible for designing and planning the steps you need to take to create a production-ready app. Unlike Popular Movies where we gave you an implementation guide, it will be up to you to figure things out for the Baking App.
 
-What Will I Learn?
+#What Will I Learn?
 In this project you will:
 
 Use MediaPlayer/Exoplayer to display videos.
@@ -22,4 +22,5 @@ The JSON file contains the recipes' instructions, ingredients, videos and images
 
 One of the skills you will demonstrate in this project is how to handle unexpected input in your data -- professional developers often cannot expect polished JSON data when building an app.
 
-
+#Recap
+I decided to take advantage of androids new Architecture components. I treated the data source as if it were an API and the recipes could be updated or changed. I used room along with viewmodels to handle the data. I also used the Navigation component to handle fragment navigation
