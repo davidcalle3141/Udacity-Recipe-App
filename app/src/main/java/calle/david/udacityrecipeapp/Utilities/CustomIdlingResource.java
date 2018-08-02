@@ -27,17 +27,19 @@ public class CustomIdlingResource implements android.support.test.espresso.Idlin
     public String getName() {
         return mResourceName;
     }
-
-    public void increment(){
-        counter.getAndIncrement();
-    }
-    public  void decrement(){
-        int counterVal = counter.decrementAndGet();
-        if(counterVal == 0){
-            if(resourceCallback != null)resourceCallback.onTransitionToIdle();
-        }
-        if(counterVal<0){
-            throw new IllegalArgumentException("counter is negative check decrements");
-        }
-    }
+//    public void setToZero(){counter.set(0);}
+//    public void increment(){
+//        counter.getAndIncrement();
+//    }
+//    public  void decrement(){
+//        int counterVal = counter.decrementAndGet();
+//        if(counterVal == 0){
+//            if(resourceCallback != null)resourceCallback.onTransitionToIdle();
+//        }
+//        if(counterVal<0){
+//            throw new IllegalArgumentException("counter is negative check decrements");
+//        }
+//    }
+    public void Lock(){counter.set(1);}
+    public void Unlock(){counter.set(0);}
 }

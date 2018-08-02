@@ -3,7 +3,6 @@ package calle.david.udacityrecipeapp.UI;
 
 import android.content.pm.ActivityInfo;
 import android.support.test.espresso.IdlingRegistry;
-import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
@@ -27,7 +26,6 @@ import calle.david.udacityrecipeapp.Utilities.EspressoIdlingResource;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
-import static android.support.test.espresso.action.ViewActions.swipeDown;
 import static android.support.test.espresso.action.ViewActions.swipeUp;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
@@ -35,6 +33,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
@@ -103,17 +102,9 @@ public class UITest {
         onView(withId(R.id.recipeCardsRV))
                 .perform(actionOnItemAtPosition(0,click()));
         onView(withId(R.id.ingredients_master_list_fragment)).check(matches(isDisplayed()));
-        onView(withId(R.id.ingredients_master_list_fragment))
-                .perform(swipeUp());
 
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        onView(withId(R.id.ingredientsListRV))
-                .check(matches(isDisplayed()));
+        onView(withId(R.id.ingredientsListStepsRV))
+                .perform(scrollTo());
 
         onView(withId(R.id.ingredientsListStepsRV))
                 .perform(actionOnItemAtPosition(0,click()));

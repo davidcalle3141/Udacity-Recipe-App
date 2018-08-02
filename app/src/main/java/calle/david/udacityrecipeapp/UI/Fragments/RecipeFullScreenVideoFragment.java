@@ -64,7 +64,7 @@ public class RecipeFullScreenVideoFragment extends Fragment {
         mViewModel.getFocusedStep().removeObservers(this);
         mViewModel.getFocusedStep().observe(this, focusedStep -> {
             populateUI(focusedStep);
-            EspressoIdlingResource.decrement();
+            EspressoIdlingResource.Unlock();
 
         });
 

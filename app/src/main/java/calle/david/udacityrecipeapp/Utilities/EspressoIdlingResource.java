@@ -7,11 +7,11 @@ public class EspressoIdlingResource {
     private static CustomIdlingResource mCustomIdlingResource =
             new CustomIdlingResource(RESOURCE);
 
-    public static void increment(){
-        mCustomIdlingResource.increment();
+    public static void Lock(){
+        mCustomIdlingResource.Lock();
     }
-    public static void decrement(){
-        mCustomIdlingResource.decrement();
+    public static void Unlock(){
+        mCustomIdlingResource.Unlock();
     }
     public static IdlingResource getIdlingResource(){
         return mCustomIdlingResource;

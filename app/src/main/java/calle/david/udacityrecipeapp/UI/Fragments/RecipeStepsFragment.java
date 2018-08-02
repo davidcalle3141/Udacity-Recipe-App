@@ -118,7 +118,7 @@ public class RecipeStepsFragment extends Fragment {
                 mFrameLayout.setVisibility(View.GONE);
                 if (focusedStep != null)
                     populateUI(focusedStep);
-                EspressoIdlingResource.decrement();
+                EspressoIdlingResource.Unlock();
 
             }); }
 
@@ -185,6 +185,7 @@ public class RecipeStepsFragment extends Fragment {
             }
 
         });
+        cleanUpPlayer();
     }
     @OnClick(R.id.previous_button)
     public void onPreviousClick(){
@@ -200,6 +201,7 @@ public class RecipeStepsFragment extends Fragment {
                 mViewModel.setStepNum(newPosition);
                 mViewModel.getFocusedStep().postValue(stepsList.get(newPosition));}
         });
+        cleanUpPlayer();
     }
 
     private void populateUI(Steps focusedStep) {

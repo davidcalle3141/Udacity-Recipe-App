@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -49,7 +50,7 @@ public class RecipeIngredientsFragment extends Fragment implements StepListAdapt
     IngredientListAdapter ingredientListAdapter;
     StepListAdapter stepListAdapter;
 
-    @BindView(R.id.ingredients_master_list_fragment)NestedScrollView scrollView;
+    @BindView(R.id.ingredients_master_list_fragment)ScrollView scrollView;
     @BindView(R.id.ingredientsListRV)RecyclerView recyclerViewIngredientsList;
     @BindView(R.id.ingredientsListStepsRV)RecyclerView recyclerViewStepDescription;
     @BindView(R.id.ingredients_card_name)TextView recipeName;
@@ -101,7 +102,7 @@ public class RecipeIngredientsFragment extends Fragment implements StepListAdapt
         mViewModel.getSelectedRecipe().observe(this, recipe -> {
             if (recipe != null) {
                 populateUI(recipe);
-                EspressoIdlingResource.decrement();
+                EspressoIdlingResource.Unlock();
 
             }
         });
@@ -136,7 +137,7 @@ public class RecipeIngredientsFragment extends Fragment implements StepListAdapt
     }
     @Override
      public void onClick(int position) {
-        EspressoIdlingResource.increment();//stop test till we navigate to next view
+        EspressoIdlingResource.Lock();//stop test till we navigate to next view
 
         mViewModel.getFocusedStep().removeObservers(this);
         mViewModel.getFetchedSteps().removeObservers(this);

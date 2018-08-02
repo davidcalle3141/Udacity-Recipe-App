@@ -54,6 +54,7 @@ public class RecipeCardsViewFragment extends Fragment implements RecipeCardAdapt
         this.view = inflater.inflate(R.layout.fragment_recipe_cards,container,false);
         mContext = this.getContext();
         ButterKnife.bind(this,view);
+        EspressoIdlingResource.Lock();
         return view;
     }
 
@@ -92,7 +93,7 @@ public class RecipeCardsViewFragment extends Fragment implements RecipeCardAdapt
                 recipeCardAdapter.addRecipeList(recipes);
                 recipeCardAdapter.notifyDataSetChanged();
                 recyclerView.setVisibility(View.VISIBLE);
-                EspressoIdlingResource.decrement();
+                EspressoIdlingResource.Unlock();
 
                 }
 
@@ -103,8 +104,7 @@ public class RecipeCardsViewFragment extends Fragment implements RecipeCardAdapt
 
     @Override
     public void onItemClick(int position) {
-        EspressoIdlingResource.increment();//stop test till we navigate to next view
-
+        EspressoIdlingResource.Lock();
         mViewModel.getRecipeList().observe(this, recipes -> {
             if(recipes!=null) {
                 mViewModel.setSelectedRecipe(recipes.get(position));
