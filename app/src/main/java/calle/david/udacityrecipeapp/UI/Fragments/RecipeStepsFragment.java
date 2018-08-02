@@ -98,7 +98,7 @@ public class RecipeStepsFragment extends Fragment {
         if i navigate directly to fullscreen fragment from ingredients fragment my navigation backstack becomes a mess
         and this fragment is skipped and cant pop back on orientation change
          */
-        if(isLandscape()&&newToStack&&!isTwoPane){
+        if(isLandscape()&&mViewModel.isHasVideo()&&newToStack&&!isTwoPane){
             newToStack=false;
             sendToFullscreenVideo();}
         /*
@@ -181,10 +181,13 @@ public class RecipeStepsFragment extends Fragment {
 
             mViewModel.setStepNum(newPosition);
             mViewModel.getFocusedStep().postValue(stepsList.get(newPosition));
-            if(mViewModel.isHasVideo() && isLandscape() && !isTwoPane) sendToFullscreenVideo();
+            mViewModel.setHasVideo(!stepsList.get(newPosition).getVideoURL().equals(""));
+
             }
+            if(mViewModel.isHasVideo() && isLandscape() && !isTwoPane) sendToFullscreenVideo();
 
         });
+
         cleanUpPlayer();
     }
     @OnClick(R.id.previous_button)
@@ -199,7 +202,14 @@ public class RecipeStepsFragment extends Fragment {
                 newPosition = a < 0 ? b + a : a % b;
 
                 mViewModel.setStepNum(newPosition);
-                mViewModel.getFocusedStep().postValue(stepsList.get(newPosition));}
+                mViewModel.getFocusedStep().postValue(stepsList.get(newPosition));
+                mViewModel.setHasVideo(!stepsList.get(newPosition).getVideoURL().equals(""));
+
+            }
+
+            if(mViewModel.isHasVideo() && isLandscape() && !isTwoPane) sendToFullscreenVideo();
+
+
         });
         cleanUpPlayer();
     }
