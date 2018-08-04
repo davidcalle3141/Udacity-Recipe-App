@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,14 +31,13 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 
 import java.util.Objects;
 
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import calle.david.udacityrecipeapp.Data.Database.Steps;
 import calle.david.udacityrecipeapp.R;
 import calle.david.udacityrecipeapp.Utilities.EspressoIdlingResource;
+import calle.david.udacityrecipeapp.Utilities.FragmentNavUtils;
 import calle.david.udacityrecipeapp.Utilities.InjectorUtils;
 import calle.david.udacityrecipeapp.ViewModel.RecipeAppViewModel;
 import calle.david.udacityrecipeapp.ViewModel.RecipeAppViewModelFactory;
@@ -48,6 +48,7 @@ public class RecipeStepsFragment extends Fragment {
     private RecipeAppViewModel mViewModel;
     private Context mContext;
     private ExoPlayer mExoPlayer;
+    private FragmentManager fragmentManager;
 
     @BindView(R.id.step_number)TextView mStepNumTextView;
     @BindView(R.id.step_card_long_description)TextView mStepLongDescription;
@@ -57,7 +58,7 @@ public class RecipeStepsFragment extends Fragment {
     @BindView(R.id.next_button)Button nextButton;
     @BindView(R.id.previous_button)Button prevButton;
     private boolean isTwoPane=false;
-    private NavController navigationController;
+   // private NavController navigationController;
     private boolean newToStack;
 
     public RecipeStepsFragment(){
@@ -71,6 +72,7 @@ public class RecipeStepsFragment extends Fragment {
         this.mView = inflater.inflate(R.layout.fragment_recipe_steps_fragment, container,false);
         this.mContext = getContext();
         ButterKnife.bind(this,mView);
+        fragmentManager = getFragmentManager();
         return mView;
 
     }
@@ -106,7 +108,10 @@ public class RecipeStepsFragment extends Fragment {
         the ingredients fragment by checking whether or not this fragment was already in the backstack or previously created
         */
         else if(!newToStack && isLandscape()&&!isTwoPane){
-            Navigation.findNavController(mView).navigateUp();}
+           // Navigation.findNavController(mView).navigateUp();
+            fragmentManager.popBackStack();
+
+        }
 
         /*
         finally this populates the UI if in landscape
@@ -158,7 +163,9 @@ public class RecipeStepsFragment extends Fragment {
             mViewModel.setVideoPosition(mExoPlayer.getCurrentPosition());
             cleanUpPlayer();
         }
-        Navigation.findNavController(mView).navigate(R.id.videoPlayerDestination);
+      //  Navigation.findNavController(mView).navigate(R.id.videoPlayerDestination);
+        FragmentNavUtils.navigateToFragment(fragmentManager,new RecipeFullScreenVideoFragment(),R.id.recipe_card_view_container,"VIDEO_FRAGMENT");
+
 
 
 

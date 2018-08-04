@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NavUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,11 +31,7 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import androidx.navigation.NavAction;
-import androidx.navigation.NavController;
-import androidx.navigation.NavDirections;
-import androidx.navigation.NavGraph;
-import androidx.navigation.Navigation;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import calle.david.udacityrecipeapp.Data.Database.Steps;
@@ -49,6 +46,7 @@ public class RecipeFullScreenVideoFragment extends Fragment {
     private View mView;
     private Context mContext;
     private RecipeAppViewModel mViewModel;
+    private FragmentManager fragmentManager;
 
     private ExoPlayer mExoPlayer;
 
@@ -78,6 +76,7 @@ public class RecipeFullScreenVideoFragment extends Fragment {
         this.mContext = getContext();
         ButterKnife.bind(this,mView);
         hideSystemUI();
+        fragmentManager = getFragmentManager();
         return mView;
 
     }
@@ -89,7 +88,8 @@ public class RecipeFullScreenVideoFragment extends Fragment {
         if(mExoPlayer!=null)
             mViewModel.setVideoPosition(mExoPlayer.getCurrentPosition());
         cleanUpPlayer();
-        Navigation.findNavController(mView).popBackStack();
+        //Navigation.findNavController(mView).popBackStack();
+        fragmentManager.popBackStack();
 
     }
     @Override

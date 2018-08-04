@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,8 +21,7 @@ import android.appwidget.AppWidgetManager;
 
 import java.util.Objects;
 
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import calle.david.udacityrecipeapp.Data.Database.Recipe;
@@ -30,6 +30,7 @@ import calle.david.udacityrecipeapp.UI.Adapters.RecipeCardAdapter;
 import calle.david.udacityrecipeapp.UI.Widget.HomeScreenWidget;
 import calle.david.udacityrecipeapp.UI.Widget.WidgetUtils;
 import calle.david.udacityrecipeapp.Utilities.EspressoIdlingResource;
+import calle.david.udacityrecipeapp.Utilities.FragmentNavUtils;
 import calle.david.udacityrecipeapp.Utilities.InjectorUtils;
 import calle.david.udacityrecipeapp.ViewModel.RecipeAppViewModelFactory;
 import calle.david.udacityrecipeapp.ViewModel.RecipeAppViewModel;
@@ -38,6 +39,7 @@ public class RecipeCardsViewFragment extends Fragment implements RecipeCardAdapt
     private RecipeAppViewModel mViewModel;
     private Context mContext;
     private  boolean isTwoPane=false;
+    private FragmentManager fragmentManager;
 
 
     private RecipeCardAdapter recipeCardAdapter;
@@ -61,6 +63,7 @@ public class RecipeCardsViewFragment extends Fragment implements RecipeCardAdapt
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        fragmentManager = getFragmentManager();
         //since this is the start destination this code checks is we are using a tablet or not
         //in the future i will pass this as an argument to other fragments instead of checking at every fragment
         if(Objects.requireNonNull(getActivity()).findViewById(R.id.twoPane)!=null){
@@ -109,8 +112,9 @@ public class RecipeCardsViewFragment extends Fragment implements RecipeCardAdapt
             if(recipes!=null) {
                 mViewModel.setSelectedRecipe(recipes.get(position));
                 updateWidget(recipes.get(position));
-                if(isTwoPane)Navigation.findNavController(view).navigate(R.id.action_recipeCardsViewFragment_to_master_list_fragment);
-                else Navigation.findNavController(view).navigate(R.id.recipeIngredientsDestination);
+                if(isTwoPane) FragmentNavUtils.navigateToFragment(fragmentManager,new MasterListFragment(),R.id.recipe_card_view_container,"MASTER_LIST_FRAGMENT");
+                else FragmentNavUtils.navigateToFragment(fragmentManager,new RecipeIngredientsFragment(),R.id.recipe_card_view_container,"INGREDIENTS_FRAGMENT");
+
             }
 
         });

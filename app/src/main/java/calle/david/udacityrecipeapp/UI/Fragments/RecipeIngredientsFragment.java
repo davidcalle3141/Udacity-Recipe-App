@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,9 +28,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 import java.util.Objects;
 
-import androidx.navigation.NavController;
-import androidx.navigation.NavDestination;
-import androidx.navigation.Navigation;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import calle.david.udacityrecipeapp.Data.Database.Ingredients;
@@ -38,6 +37,7 @@ import calle.david.udacityrecipeapp.R;
 import calle.david.udacityrecipeapp.UI.Adapters.IngredientListAdapter;
 import calle.david.udacityrecipeapp.UI.Adapters.StepListAdapter;
 import calle.david.udacityrecipeapp.Utilities.EspressoIdlingResource;
+import calle.david.udacityrecipeapp.Utilities.FragmentNavUtils;
 import calle.david.udacityrecipeapp.Utilities.InjectorUtils;
 import calle.david.udacityrecipeapp.ViewModel.RecipeAppViewModel;
 import calle.david.udacityrecipeapp.ViewModel.RecipeAppViewModelFactory;
@@ -45,6 +45,7 @@ import calle.david.udacityrecipeapp.ViewModel.RecipeAppViewModelFactory;
 
 public class RecipeIngredientsFragment extends Fragment implements StepListAdapter.StepListAdapterOnClickListener {
     private RecipeAppViewModel mViewModel;
+    private FragmentManager fragmentManager;
     private View view;
     private int[] position= new int[2];
     IngredientListAdapter ingredientListAdapter;
@@ -72,6 +73,7 @@ public class RecipeIngredientsFragment extends Fragment implements StepListAdapt
         ButterKnife.bind(this,view);
         LinearLayoutManager layoutManagerIng = new LinearLayoutManager(mContext);
         LinearLayoutManager layoutManagerSteps = new LinearLayoutManager(mContext);
+        fragmentManager = getFragmentManager();
 
         recyclerViewStepDescription.setNestedScrollingEnabled(false);
         recyclerViewIngredientsList.setNestedScrollingEnabled(false);
@@ -148,7 +150,8 @@ public class RecipeIngredientsFragment extends Fragment implements StepListAdapt
                 mViewModel.setStepNum(position);
                 mViewModel.setHasVideo(!stepsList.get(position).getVideoURL().equals(""));
                 if(!isTwoPane) {
-                    Navigation.findNavController(view).navigate(R.id.recipeStepsDestination);
+                  //  Navigation.findNavController(view).navigate(R.id.recipeStepsDestination);
+                    FragmentNavUtils.navigateToFragment(fragmentManager,new RecipeStepsFragment(),R.id.recipe_card_view_container,"STEPS_FRAGMENT");
                 }
             }
         });
