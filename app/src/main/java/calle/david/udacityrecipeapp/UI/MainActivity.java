@@ -25,25 +25,29 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         setContentView(R.layout.activity_main);
-        setSupportActionBar(findViewById(R.id.my_toolbar));
 
-        ActionBar ab = getSupportActionBar();
-        if (ab != null) {
-            ab.setDisplayHomeAsUpEnabled(true);
-        }
+
         if(savedInstanceState == null){
-            if(findViewById(R.id.twoPane) != null) FragmentNavUtils.startActivityFragment(getSupportFragmentManager(),new RecipeCardsViewFragment(),R.id.recipe_card_view_container_tablet);
-            else FragmentNavUtils.startActivityFragment(getSupportFragmentManager(),new RecipeCardsViewFragment(),R.id.recipe_card_view_container);
+            if(findViewById(R.id.twoPane) != null){
+                setSupportActionBar(findViewById(R.id.my_toolbar_tablet));
+                actionBarSetUp();
+                FragmentNavUtils.startActivityFragment(getSupportFragmentManager(),new RecipeCardsViewFragment(),R.id.recipe_card_view_container_tablet);}
+            else {
+                setSupportActionBar(findViewById(R.id.my_toolbar));
+                actionBarSetUp();
+                FragmentNavUtils.startActivityFragment(getSupportFragmentManager(),new RecipeCardsViewFragment(),R.id.recipe_card_view_container);}
         }
 
 
     }
 
-
-
+    private void actionBarSetUp() {
+        ActionBar ab = getSupportActionBar();
+        if (ab != null) {
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
+    }
 
 
 }
