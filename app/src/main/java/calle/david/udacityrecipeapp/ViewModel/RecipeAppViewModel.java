@@ -24,6 +24,7 @@ public class RecipeAppViewModel extends ViewModel {
     private int stepListSize;
     private int stepNum;
     private boolean hasVideo;
+    private boolean playerState;
 
 
 
@@ -102,5 +103,13 @@ public class RecipeAppViewModel extends ViewModel {
 
     public void setHasVideo(boolean hasVideo) {
         this.hasVideo = hasVideo;
+    }
+
+    public boolean isPlayerState() {
+        return playerState;
+    }
+
+    public void setPlayerState(boolean playerState) {
+        this.playerState = playerState;
     }
 }

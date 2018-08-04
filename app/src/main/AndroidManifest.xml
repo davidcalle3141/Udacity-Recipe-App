@@ -15,8 +15,7 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".UI.MainActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize">
+            android:name=".UI.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>

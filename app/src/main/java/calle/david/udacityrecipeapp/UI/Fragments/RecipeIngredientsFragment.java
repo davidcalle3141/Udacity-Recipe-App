@@ -148,6 +148,7 @@ public class RecipeIngredientsFragment extends Fragment implements StepListAdapt
             if(stepsList!= null){
                 mViewModel.getFocusedStep().setValue(stepsList.get(position));
                 mViewModel.setStepNum(position);
+                mViewModel.setPlayerState(true);
                 mViewModel.setHasVideo(!stepsList.get(position).getVideoURL().equals(""));
                 if(!isTwoPane) {
                   //  Navigation.findNavController(view).navigate(R.id.recipeStepsDestination);

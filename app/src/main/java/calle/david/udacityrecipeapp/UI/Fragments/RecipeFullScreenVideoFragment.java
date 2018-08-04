@@ -61,7 +61,9 @@ public class RecipeFullScreenVideoFragment extends Fragment {
 
         mViewModel.getFocusedStep().removeObservers(this);
         mViewModel.getFocusedStep().observe(this, focusedStep -> {
-            populateUI(focusedStep);
+            if (focusedStep != null) {
+                populateUI(focusedStep);
+            }
             EspressoIdlingResource.Unlock();
 
         });
@@ -74,38 +76,33 @@ public class RecipeFullScreenVideoFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         this.mView= inflater.inflate(R.layout.fragment_video_player,container,false);
         this.mContext = getContext();
+        fragmentManager = getFragmentManager();
+        if(!isLandscape()){
+
+            fragmentManager.popBackStack();}
         ButterKnife.bind(this,mView);
         hideSystemUI();
-        fragmentManager = getFragmentManager();
         return mView;
 
     }
 
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        if(mExoPlayer!=null)
-            mViewModel.setVideoPosition(mExoPlayer.getCurrentPosition());
-        cleanUpPlayer();
-        //Navigation.findNavController(mView).popBackStack();
-        fragmentManager.popBackStack();
-
-    }
     @Override
     public void onResume() {
         super.onResume();
-        if(mExoPlayer!=null)mExoPlayer.setPlayWhenReady(true);
+       // if(mExoPlayer!=null)mExoPlayer.setPlayWhenReady(true);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if(mExoPlayer!=null)mExoPlayer.setPlayWhenReady(false);
+        mViewModel.setVideoPosition(mExoPlayer.getCurrentPosition());
+        mViewModel.setPlayerState(mExoPlayer.getPlayWhenReady());
+        //if(mExoPlayer!=null)mExoPlayer.setPlayWhenReady(false);
     }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        cleanUpPlayer();
         showSystemUI();
     }
 
@@ -143,7 +140,7 @@ public class RecipeFullScreenVideoFragment extends Fragment {
         MediaSource mediaSource = buildMediaSource(uri);
         mExoPlayer.prepare(mediaSource, true, false);
         if(mViewModel.getVideoPosition() != 0)mExoPlayer.seekTo(mViewModel.getVideoPosition());
-        mExoPlayer.setPlayWhenReady(true);
+        mExoPlayer.setPlayWhenReady(mViewModel.isPlayerState());
 
     }
 
@@ -158,7 +155,7 @@ public class RecipeFullScreenVideoFragment extends Fragment {
 
     private void cleanUpPlayer(){
         mPlayerView.setPlayer(null);
-        mExoPlayer.release();
+        if(mExoPlayer!=null)mExoPlayer.release();
         mExoPlayer = null;
     }
 }

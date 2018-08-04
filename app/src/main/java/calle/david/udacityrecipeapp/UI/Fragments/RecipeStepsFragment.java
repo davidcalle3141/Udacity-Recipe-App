@@ -154,7 +154,10 @@ public class RecipeStepsFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        if(mExoPlayer!= null)mExoPlayer.setPlayWhenReady(false);
+        if(mExoPlayer!=null){
+        mViewModel.setVideoPosition(mExoPlayer.getCurrentPosition());
+        mViewModel.setPlayerState(mExoPlayer.getPlayWhenReady());}
+        //if(mExoPlayer!= null)mExoPlayer.setPlayWhenReady(false);
     }
 
     private void sendToFullscreenVideo() {
@@ -254,7 +257,7 @@ public class RecipeStepsFragment extends Fragment {
                MediaSource mediaSource = buildMediaSource(uri);
                mExoPlayer.prepare(mediaSource, false, false);
                if(mViewModel.getVideoPosition()>0)mExoPlayer.seekTo(mViewModel.getVideoPosition());
-               mExoPlayer.setPlayWhenReady(true);
+               mExoPlayer.setPlayWhenReady(mViewModel.isPlayerState());
                mFrameLayout.setVisibility(View.VISIBLE);
 
             });
