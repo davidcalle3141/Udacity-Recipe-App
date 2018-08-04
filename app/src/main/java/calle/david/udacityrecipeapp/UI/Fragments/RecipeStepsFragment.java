@@ -201,6 +201,7 @@ public class RecipeStepsFragment extends Fragment {
             mViewModel.setStepNum(newPosition);
             mViewModel.getFocusedStep().postValue(stepsList.get(newPosition));
             mViewModel.setHasVideo(!stepsList.get(newPosition).getVideoURL().equals(""));
+            if(isTwoPane)mViewModel.setPlayerState(true);
 
             }
             if(mViewModel.isHasVideo() && isLandscape() && !isTwoPane) sendToFullscreenVideo();

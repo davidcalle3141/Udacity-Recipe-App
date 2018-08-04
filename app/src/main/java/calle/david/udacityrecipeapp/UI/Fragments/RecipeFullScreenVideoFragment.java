@@ -103,13 +103,16 @@ public class RecipeFullScreenVideoFragment extends Fragment {
             mViewModel.setVideoPosition(mExoPlayer.getCurrentPosition());
             mViewModel.setPlayerState(mExoPlayer.getPlayWhenReady());
             mExoPlayer.setPlayWhenReady(false);
+            //clean up is handled in the steps fragment
         }
 
     }
+
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        cleanUpPlayer();
+//        cleanUpPlayer();
         showSystemUI();
     }
 

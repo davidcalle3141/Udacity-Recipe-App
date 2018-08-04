@@ -111,8 +111,11 @@ public class RecipeCardsViewFragment extends Fragment implements RecipeCardAdapt
         mViewModel.getRecipeList().observe(this, recipes -> {
             if(recipes!=null) {
                 mViewModel.setSelectedRecipe(recipes.get(position));
+
                 updateWidget(recipes.get(position));
-                if(isTwoPane) FragmentNavUtils.navigateToFragment(fragmentManager,new MasterListFragment(),R.id.recipe_card_view_container_tablet,"MASTER_LIST_FRAGMENT");
+                if(isTwoPane){
+                    mViewModel.setPlayerState(true);
+                    FragmentNavUtils.navigateToFragment(fragmentManager,new MasterListFragment(),R.id.recipe_card_view_container_tablet,"MASTER_LIST_FRAGMENT");}
                 else FragmentNavUtils.navigateToFragment(fragmentManager,new RecipeIngredientsFragment(),R.id.recipe_card_view_container,"INGREDIENTS_FRAGMENT");
 
             }
