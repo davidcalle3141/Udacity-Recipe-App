@@ -47,7 +47,7 @@ public class RecipeFullScreenVideoFragment extends Fragment {
     private Context mContext;
     private RecipeAppViewModel mViewModel;
     private FragmentManager fragmentManager;
-
+    private boolean mLandscape;
     private ExoPlayer mExoPlayer;
 
     @BindView(R.id.fullscreen_video_player)PlayerView mPlayerView;
@@ -58,6 +58,7 @@ public class RecipeFullScreenVideoFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         RecipeAppViewModelFactory factory = InjectorUtils.provideRecipeCardViewFactory(Objects.requireNonNull(getActivity()));
         mViewModel = ViewModelProviders.of(getActivity(),factory).get(RecipeAppViewModel.class);
+        if(!isLandscape()){ fragmentManager.popBackStack();}
 
         mViewModel.getFocusedStep().removeObservers(this);
         mViewModel.getFocusedStep().observe(this, focusedStep -> {
@@ -77,27 +78,31 @@ public class RecipeFullScreenVideoFragment extends Fragment {
         this.mView= inflater.inflate(R.layout.fragment_video_player,container,false);
         this.mContext = getContext();
         fragmentManager = getFragmentManager();
-        if(!isLandscape()){
-
-            fragmentManager.popBackStack();}
         ButterKnife.bind(this,mView);
         hideSystemUI();
         return mView;
 
     }
 
+
     @Override
     public void onResume() {
         super.onResume();
-       // if(mExoPlayer!=null)mExoPlayer.setPlayWhenReady(true);
+        if(mExoPlayer!=null) mExoPlayer.setPlayWhenReady(mViewModel.isPlayerState());
+
+
+
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mViewModel.setVideoPosition(mExoPlayer.getCurrentPosition());
-        mViewModel.setPlayerState(mExoPlayer.getPlayWhenReady());
-        //if(mExoPlayer!=null)mExoPlayer.setPlayWhenReady(false);
+        if(mExoPlayer!=null){
+            mViewModel.setVideoPosition(mExoPlayer.getCurrentPosition());
+            mViewModel.setPlayerState(mExoPlayer.getPlayWhenReady());
+            mExoPlayer.setPlayWhenReady(false);
+        }
+
     }
     @Override
     public void onDestroyView() {

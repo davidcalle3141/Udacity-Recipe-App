@@ -3,12 +3,15 @@ package calle.david.udacityrecipeapp.UI.Fragments;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -28,6 +32,7 @@ import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
+import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
 
@@ -49,6 +54,7 @@ public class RecipeStepsFragment extends Fragment {
     private Context mContext;
     private ExoPlayer mExoPlayer;
     private FragmentManager fragmentManager;
+    private Resources resources;
 
     @BindView(R.id.step_number)TextView mStepNumTextView;
     @BindView(R.id.step_card_long_description)TextView mStepLongDescription;
@@ -57,9 +63,11 @@ public class RecipeStepsFragment extends Fragment {
     @BindView(R.id.recipe_video_step_card)CardView cardView;
     @BindView(R.id.next_button)Button nextButton;
     @BindView(R.id.previous_button)Button prevButton;
+    @BindView(R.id.thumbnail_image)ImageView thumbnailImage;
     private boolean isTwoPane=false;
    // private NavController navigationController;
     private boolean newToStack;
+
 
     public RecipeStepsFragment(){
 
@@ -72,7 +80,7 @@ public class RecipeStepsFragment extends Fragment {
         this.mView = inflater.inflate(R.layout.fragment_recipe_steps_fragment, container,false);
         this.mContext = getContext();
         ButterKnife.bind(this,mView);
-        fragmentManager = getFragmentManager();
+        resources = getResources();
         return mView;
 
     }
@@ -114,7 +122,7 @@ public class RecipeStepsFragment extends Fragment {
         }
 
         /*
-        finally this populates the UI if in landscape
+        finally this populates the UI if in portrait
         */
         else{
 
@@ -131,24 +139,25 @@ public class RecipeStepsFragment extends Fragment {
 
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-            if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE && mViewModel.isHasVideo() && !isTwoPane ){
-                newToStack=false;
-                sendToFullscreenVideo();
-            }
-            if(isTwoPane && mExoPlayer!=null){
-                mViewModel.setVideoPosition(mExoPlayer.getCurrentPosition());
-                //calls onActivityCreated so width and height of video can be recalculated on screen rotation in tablet
-                onActivityCreated(null);
-            }
-
-    }
+//    @Override
+//    public void onConfigurationChanged(Configuration newConfig) {
+//        super.onConfigurationChanged(newConfig);
+//            if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE && mViewModel.isHasVideo() && !isTwoPane ){
+//                newToStack=false;
+//                sendToFullscreenVideo();
+//            }
+//            if(isTwoPane && mExoPlayer!=null){
+//                mViewModel.setVideoPosition(mExoPlayer.getCurrentPosition());
+//                //calls onActivityCreated so width and height of video can be recalculated on screen rotation in tablet
+//                onActivityCreated(null);
+//            }
+//
+//    }
     @Override
     public void onResume() {
         super.onResume();
-        if(mExoPlayer!=null) mExoPlayer.setPlayWhenReady(true);
+        if(mExoPlayer!=null) mExoPlayer.setPlayWhenReady(mViewModel.isPlayerState());
+
     }
 
     @Override
@@ -157,7 +166,7 @@ public class RecipeStepsFragment extends Fragment {
         if(mExoPlayer!=null){
         mViewModel.setVideoPosition(mExoPlayer.getCurrentPosition());
         mViewModel.setPlayerState(mExoPlayer.getPlayWhenReady());}
-        //if(mExoPlayer!= null)mExoPlayer.setPlayWhenReady(false);
+        if(mExoPlayer!= null)mExoPlayer.setPlayWhenReady(false);
     }
 
     private void sendToFullscreenVideo() {
@@ -227,47 +236,63 @@ public class RecipeStepsFragment extends Fragment {
     private void populateUI(Steps focusedStep) {
 
         String videoURL = focusedStep.getVideoURL();
+        String thumbailImage = focusedStep.getThumbnailURL();
         if(videoURL.equals(""))mViewModel.setHasVideo(false);
-        else mViewModel.setHasVideo(true);
-        if(mViewModel.isHasVideo())initializePlayer(videoURL);
+        else mViewModel.setPlayerState(mViewModel.isPlayerState());
+        if(mViewModel.isHasVideo())initializePlayer(videoURL,thumbailImage);
         else cleanUpPlayer();
         mStepNumTextView.setText("Step: "+Integer.valueOf(focusedStep.getId()));
         mStepLongDescription.setText(focusedStep.getDescription());
     }
 
+    private void initializeThumbnail(String thumbnailURL) {
 
-    private void initializePlayer(String video){
+        Picasso.get().load(thumbnailURL).into(thumbnailImage);
+        mPlayerView.setVisibility(View.GONE);
+        thumbnailImage.setVisibility(View.VISIBLE);
+    }
+
+
+    private  void initializePlayer(String video,String thumbail){
             //it takes time for wrap content(height) on player view to calculate the height
             //so before it could calculate the height it would take up the whole screen then wrap the actuall height of video
             //this waits for mview to render and calculates height based on the view width and the video player matches parent
             cardView.post(() -> {
-               float marginOffset = getResources().getDimension(R.dimen.card_view_margin);
-               float width= mView.getWidth()- marginOffset*2;
-               float aspectRatio = (float)9/(float)16;
-               int height = (int) (width*aspectRatio);
-               mFrameLayout.setLayoutParams(new LinearLayout.LayoutParams((int) width,height));
-               if(mExoPlayer!= null)cleanUpPlayer();
 
-               mExoPlayer = ExoPlayerFactory.newSimpleInstance(
-                        new DefaultRenderersFactory(mContext),
-                        new DefaultTrackSelector(),
-                        new DefaultLoadControl());
-               mPlayerView.setPlayer(mExoPlayer);
-               Uri uri = Uri.parse(video);
-               MediaSource mediaSource = buildMediaSource(uri);
-               mExoPlayer.prepare(mediaSource, false, false);
-               if(mViewModel.getVideoPosition()>0)mExoPlayer.seekTo(mViewModel.getVideoPosition());
-               mExoPlayer.setPlayWhenReady(mViewModel.isPlayerState());
-               mFrameLayout.setVisibility(View.VISIBLE);
+                    float marginOffset = resources.getDimension(R.dimen.card_view_margin);
+                    float width = mView.getWidth() - marginOffset * 2;
+                    float aspectRatio = (float) 9 / (float) 16;
+                    int height = (int) (width * aspectRatio);
+                    if(!thumbail.equals("")){
+                        initializeThumbnail(thumbail);
+                        return;
+                    }
 
-            });
+                    mFrameLayout.setLayoutParams(new LinearLayout.LayoutParams((int) width, height));
+                    if (mExoPlayer != null) cleanUpPlayer();
+
+                    mExoPlayer = ExoPlayerFactory.newSimpleInstance(
+                           new DefaultRenderersFactory(mContext),
+                           new DefaultTrackSelector(),
+                           new DefaultLoadControl());
+                    mPlayerView.setPlayer(mExoPlayer);
+                    Uri uri = Uri.parse(video);
+                    MediaSource mediaSource = buildMediaSource(uri);
+                    mExoPlayer.prepare(mediaSource, false, false);
+                    if (mViewModel.getVideoPosition() > 0)
+                       mExoPlayer.seekTo(mViewModel.getVideoPosition());
+                    mExoPlayer.setPlayWhenReady(mViewModel.isPlayerState());
+                    mFrameLayout.setVisibility(View.VISIBLE);
+
+            });}
 
 
-    }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fragmentManager = getFragmentManager();
         this.newToStack = true;
     }
 
