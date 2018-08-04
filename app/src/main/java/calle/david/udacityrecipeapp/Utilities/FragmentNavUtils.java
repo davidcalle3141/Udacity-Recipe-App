@@ -13,7 +13,7 @@ public class FragmentNavUtils {
 
     public static void startActivityFragment(FragmentManager fragmentManager, Fragment entryFragment, int container){
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(container,entryFragment,"entryFragment");
+        fragmentTransaction.add(container,entryFragment,"ENTRY_FRAGMENT");
         fragmentTransaction.commit();
     }
     public static void navigateToFragment(FragmentManager fragmentManager, Fragment destination, int container,String FRAGMENT_TAG){

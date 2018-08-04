@@ -33,12 +33,15 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.junit.Assume.assumeTrue;
 
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class UITest {
 
+    private boolean mIsScreenSw600dp;
+    private MainActivity mActivity;
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
     @Before
@@ -60,7 +63,7 @@ public class UITest {
         ViewInteraction scrollView = onView(
                 allOf(withId(R.id.ingredients_master_list_fragment),
                         childAtPosition(
-                                allOf(withId(R.id.recipe_card_view_fragment),
+                                allOf(withId(R.id.recipe_card_view_container),
                                         childAtPosition(
                                                 IsInstanceOf.<View>instanceOf(android.widget.RelativeLayout.class),
                                                 0)),

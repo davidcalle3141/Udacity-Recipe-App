@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NavUtils;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,7 @@ public class RecipeFullScreenVideoFragment extends Fragment {
     private ExoPlayer mExoPlayer;
 
     @BindView(R.id.fullscreen_video_player)PlayerView mPlayerView;
+
 
 
     @Override
@@ -125,11 +127,14 @@ public class RecipeFullScreenVideoFragment extends Fragment {
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
+        getActivity().findViewById(R.id.my_toolbar).setVisibility(View.GONE);
+
     }
     private void showSystemUI(){
         View decorView = Objects.requireNonNull(getActivity()).getWindow().getDecorView();
         decorView.setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_VISIBLE);
+        getActivity().findViewById(R.id.my_toolbar).setVisibility(View.VISIBLE);
 
     }
 

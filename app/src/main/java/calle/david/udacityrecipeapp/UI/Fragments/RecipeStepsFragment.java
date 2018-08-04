@@ -238,7 +238,9 @@ public class RecipeStepsFragment extends Fragment {
         String videoURL = focusedStep.getVideoURL();
         String thumbailImage = focusedStep.getThumbnailURL();
         if(videoURL.equals(""))mViewModel.setHasVideo(false);
-        else mViewModel.setPlayerState(mViewModel.isPlayerState());
+        else {
+            mViewModel.setHasVideo(true);
+            mViewModel.setPlayerState(mViewModel.isPlayerState());}
         if(mViewModel.isHasVideo())initializePlayer(videoURL,thumbailImage);
         else cleanUpPlayer();
         mStepNumTextView.setText("Step: "+Integer.valueOf(focusedStep.getId()));

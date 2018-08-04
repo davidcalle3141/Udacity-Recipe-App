@@ -8,8 +8,20 @@
     android:background="@drawable/gradient_colors"
     >
 
-
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        app:titleTextColor="@color/colorAccent"
+        app:subtitleTextColor="@color/colorAccent"
+        android:theme="@style/AppTheme"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        android:visibility="visible"
+        />
     <FrameLayout
+        android:layout_below="@id/my_toolbar"
         android:id="@+id/recipe_card_view_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

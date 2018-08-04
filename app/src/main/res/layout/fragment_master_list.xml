@@ -10,11 +10,13 @@
         android:id="@+id/master_fragment_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="7" />
+        android:layout_weight="7"
+        android:name="calle.david.udacityrecipeapp.UI.Fragments.RecipeIngredientsFragment"/>
 
     <fragment
         android:id="@+id/master_fragment_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="3" />
+        android:layout_weight="3"
+        android:name="calle.david.udacityrecipeapp.UI.Fragments.RecipeStepsFragment"/>
 </LinearLayout>
