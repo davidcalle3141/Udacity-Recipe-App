@@ -60,7 +60,9 @@ public class RecipeFullScreenVideoFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         RecipeAppViewModelFactory factory = InjectorUtils.provideRecipeCardViewFactory(Objects.requireNonNull(getActivity()));
         mViewModel = ViewModelProviders.of(getActivity(),factory).get(RecipeAppViewModel.class);
-        if(!isLandscape()){ fragmentManager.popBackStack();}
+        if(!isLandscape()){
+            cleanUpPlayer();
+            fragmentManager.popBackStack();}
 
         mViewModel.getFocusedStep().removeObservers(this);
         mViewModel.getFocusedStep().observe(this, focusedStep -> {
@@ -103,7 +105,7 @@ public class RecipeFullScreenVideoFragment extends Fragment {
             mViewModel.setVideoPosition(mExoPlayer.getCurrentPosition());
             mViewModel.setPlayerState(mExoPlayer.getPlayWhenReady());
             mExoPlayer.setPlayWhenReady(false);
-            //clean up is handled in the steps fragment
+            //video clean up is handled in the steps fragment
         }
 
     }
@@ -112,7 +114,7 @@ public class RecipeFullScreenVideoFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-//        cleanUpPlayer();
+        cleanUpPlayer();
         showSystemUI();
     }
 
