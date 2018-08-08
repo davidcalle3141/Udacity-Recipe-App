@@ -25,6 +25,7 @@ public class RecipeAppViewModel extends ViewModel {
     private int stepNum;
     private boolean hasVideo;
     private boolean playerState;
+    private boolean exoPlayerExists;
 
 
 
@@ -55,6 +56,7 @@ public class RecipeAppViewModel extends ViewModel {
         return mSteplist;
     }
     public LiveData<List<Steps>> getFetchedSteps(){
+        exoPlayerExists=false;
         videoPosition = 0;
         return mSteplist;
     }
@@ -69,6 +71,7 @@ public class RecipeAppViewModel extends ViewModel {
     }
 
     public MutableLiveData<Steps> getFocusedStep() {
+
         return mFocusedStep;
     }
 
@@ -79,10 +82,6 @@ public class RecipeAppViewModel extends ViewModel {
 
     public void setVideoPosition(long videoPosition) {
         this.videoPosition = videoPosition;
-    }
-
-    public int getStepListSize() {
-        return stepListSize;
     }
 
     public void setStepListSize(int stepListSize) {
@@ -97,9 +96,6 @@ public class RecipeAppViewModel extends ViewModel {
         this.stepNum = stepNum;
     }
 
-    public boolean isHasVideo() {
-        return hasVideo;
-    }
 
     public void setHasVideo(boolean hasVideo) {
         this.hasVideo = hasVideo;
@@ -111,5 +107,10 @@ public class RecipeAppViewModel extends ViewModel {
 
     public void setPlayerState(boolean playerState) {
         this.playerState = playerState;
+    }
+
+
+    public void setExoPlayerExists(boolean exoPlayerExists) {
+        this.exoPlayerExists = exoPlayerExists;
     }
 }

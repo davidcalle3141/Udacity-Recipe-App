@@ -83,9 +83,6 @@ public class UITest {
         onView(withId(R.id.ingredientsListStepsRV))
                 .perform(scrollTo());
 
-        onView(withId(R.id.ingredientsListStepsRV))
-                .perform(actionOnItemAtPosition(0,click()));
-        onView(withId(R.id.fullscreen_video_player_fragment)).check(matches(isDisplayed()));
 
 
 

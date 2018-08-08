@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:layout_weight=".8">
         <include
-            layout="@layout/steps_card"
+            layout="@layout/steps_card_tablet"
             />
     </FrameLayout>
 

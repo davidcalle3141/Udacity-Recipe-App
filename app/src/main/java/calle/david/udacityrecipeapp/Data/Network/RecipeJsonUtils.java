@@ -50,6 +50,10 @@ public final class RecipeJsonUtils {
                     String description = steps.getJSONObject(j).getString("description");
                     String thumbnailURL = steps.getJSONObject(j).getString("thumbnailURL");
                     String videoURL = steps.getJSONObject(j).getString("videoURL");
+                    if(thumbnailURL.substring(thumbnailURL.lastIndexOf(".")+1, thumbnailURL.length()).equals("mp4")){
+                        videoURL=thumbnailURL;
+                        thumbnailURL="";}
+
                     Steps tempSteps = new Steps(recipeList.get(i).getId(),stepID,shortDescription,description,thumbnailURL,videoURL);
                     stepsList.add(tempSteps);
 //                    stepsList.add(new Steps(recipeList.get(i).getId()));

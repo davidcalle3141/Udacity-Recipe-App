@@ -1,5 +1,6 @@
 package calle.david.udacityrecipeapp.UI;
 
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -14,11 +15,13 @@ import calle.david.udacityrecipeapp.Utilities.FragmentNavUtils;
 
 
 public class MainActivity extends AppCompatActivity {
+    boolean isTwopane = false;
 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-            getSupportFragmentManager().popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            getSupportFragmentManager().popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -36,13 +39,18 @@ public class MainActivity extends AppCompatActivity {
         if (ab != null) {
             ab.setDisplayHomeAsUpEnabled(true);
         }
-        if(savedInstanceState == null){
-            if(findViewById(R.id.twoPane) != null) FragmentNavUtils.startActivityFragment(getSupportFragmentManager(),new RecipeCardsViewFragment(),R.id.recipe_card_view_container_tablet);
-            else FragmentNavUtils.startActivityFragment(getSupportFragmentManager(),new RecipeCardsViewFragment(),R.id.recipe_card_view_container);
+        if(savedInstanceState==null) {
+            if (findViewById(R.id.twoPane) != null) {
+                isTwopane = true;
+                FragmentNavUtils.startActivityFragment(getSupportFragmentManager(), new RecipeCardsViewFragment(), R.id.recipe_card_view_container_tablet);
+            } else
+                FragmentNavUtils.startActivityFragment(getSupportFragmentManager(), new RecipeCardsViewFragment(), R.id.recipe_card_view_container);
         }
 
 
     }
+
+    public boolean isTwopane(){return isTwopane;}
 
 
 

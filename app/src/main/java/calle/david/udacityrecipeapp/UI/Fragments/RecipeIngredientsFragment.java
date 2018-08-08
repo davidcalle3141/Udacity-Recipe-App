@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -83,6 +84,7 @@ public class RecipeIngredientsFragment extends Fragment implements StepListAdapt
         ingredientListAdapter = new IngredientListAdapter(getContext());
         recyclerViewStepDescription.setAdapter(stepListAdapter);
         recyclerViewIngredientsList.setAdapter(ingredientListAdapter);
+
 
 
 
@@ -151,7 +153,6 @@ public class RecipeIngredientsFragment extends Fragment implements StepListAdapt
                 mViewModel.setPlayerState(true);
                 mViewModel.setHasVideo(!stepsList.get(position).getVideoURL().equals(""));
                 if(!isTwoPane) {
-                  //  Navigation.findNavController(view).navigate(R.id.recipeStepsDestination);
                     FragmentNavUtils.navigateToFragment(fragmentManager,new RecipeStepsFragment(),R.id.recipe_card_view_container,"STEPS_FRAGMENT");
                 }
             }
@@ -201,9 +202,9 @@ public class RecipeIngredientsFragment extends Fragment implements StepListAdapt
                 stepListAdapter.addStepList(stepsList);
                 stepListAdapter.notifyDataSetChanged();
                 recyclerViewStepDescription.setVisibility(View.VISIBLE);
-                if(isTwoPane)mViewModel.getFocusedStep().setValue(stepsList.get(0));
             }
         });
+
 
     }
 

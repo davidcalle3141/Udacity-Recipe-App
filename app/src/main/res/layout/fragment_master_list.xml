@@ -6,17 +6,17 @@
     android:baselineAligned="false"
     android:weightSum="10">
 
-    <fragment
+    <FrameLayout
         android:id="@+id/master_fragment_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="7"
-        android:name="calle.david.udacityrecipeapp.UI.Fragments.RecipeIngredientsFragment"/>
+        />
 
-    <fragment
+    <FrameLayout
         android:id="@+id/master_fragment_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="3"
-        android:name="calle.david.udacityrecipeapp.UI.Fragments.RecipeStepsFragment"/>
+       />
 </LinearLayout>

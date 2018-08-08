@@ -1,13 +1,14 @@
 package calle.david.udacityrecipeapp.Utilities;
 
-import android.app.Activity;
-import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.text.Layout;
 
-import calle.david.udacityrecipeapp.UI.Fragments.RecipeCardsViewFragment;
+import java.util.Objects;
+
+import calle.david.udacityrecipeapp.R;
+import calle.david.udacityrecipeapp.UI.Fragments.RecipeIngredientsFragment;
+import calle.david.udacityrecipeapp.UI.Fragments.RecipeStepsFragment;
 
 public class FragmentNavUtils {
 
@@ -21,6 +22,13 @@ public class FragmentNavUtils {
         fragmentTransaction.replace(container,destination);
         fragmentTransaction.addToBackStack(FRAGMENT_TAG);
         fragmentTransaction.commit();
+    }
+    public static void replaceFragment(FragmentManager fragmentManager, int container, Fragment fragment, String FRAGMENT_TAG){
+
+        fragmentManager
+                .beginTransaction()
+                .replace(container, fragment,FRAGMENT_TAG)
+                .commit();
     }
     public static void popInclusiveTrue(FragmentManager fragmentManager, String DESTINATION_TAG){
         fragmentManager.popBackStack(DESTINATION_TAG,FragmentManager.POP_BACK_STACK_INCLUSIVE);
