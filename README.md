@@ -23,4 +23,4 @@ The JSON file contains the recipes' instructions, ingredients, videos and images
 One of the skills you will demonstrate in this project is how to handle unexpected input in your data -- professional developers often cannot expect polished JSON data when building an app.
 
 # Recap
-I decided to take advantage of androids new Architecture components. I treated the data source as if it were an API and the recipes could be updated or changed. I used room along with viewmodels to handle the data. I also used the Navigation component to handle fragment navigation
+I decided to take advantage of androids new Architecture components. I treated the data source as if it were an API and the recipes could be updated or changed. I used room along with viewmodels to handle the data.
